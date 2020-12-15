@@ -35,6 +35,7 @@ namespace GameLogic.EntityBehavior
         /// 实体当前持有的枪
         /// </summary>
         public Weapon weapon;
+        public Transform holdingPoint;
         private ShootingBaseStats baseStats; //基础属性
 
         private void Awake()
@@ -49,6 +50,21 @@ namespace GameLogic.EntityBehavior
         /// <param name="direction">射击方向</param>
         public void Shoot(Vector2 direction)
         {
+            float angle = Vector2.SignedAngle(Vector2.right, direction);
+            if (Mathf.Abs(angle) > 90) 
+            {
+                transform.localScale = new Vector3(-1, 1, 1);
+                holdingPoint.rotation = Quaternion.Euler(0, 0, angle - 180);
+                
+            }
+            else
+            {
+                transform.localScale = new Vector3(1, 1, 1);
+                holdingPoint.rotation = Quaternion.Euler(0, 0, angle);
+            }
+            
+
+
             weapon.Shoot(direction, baseStats);
         }
 

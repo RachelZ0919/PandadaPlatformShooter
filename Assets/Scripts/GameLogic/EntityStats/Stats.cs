@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace GameLogic.EntityStats
 {
-    abstract public class Stats : MonoBehaviour
+    public class Stats : MonoBehaviour
     {
         #region Stats
         /// <summary>
@@ -13,12 +14,14 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                return health;
-            }
-            set
-            {
-                health = Mathf.Max(0, value);
-                OnStatsChanged(this);
+                if (stats.ContainsKey("health"))
+                {
+                    return stats["health"];
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
         /// <summary>
@@ -28,12 +31,15 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                return attack;
-            }
-            set
-            {
-                attack = value;
-                OnStatsChanged(this);
+                if (stats.ContainsKey("attack"))
+                {
+                    return stats["attack"];
+                }
+                else
+                {
+                    return 0;
+                }
+
             }
         }
         /// <summary>
@@ -43,12 +49,14 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                return shootingSpeed;
-            }
-            set
-            {
-                shootingSpeed = value;
-                OnStatsChanged(this);
+                if (stats.ContainsKey("shootingSpeed"))
+                {
+                    return stats["shootingSpeed"];
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
         /// <summary>
@@ -58,12 +66,14 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                return projectileSpeed;
-            }
-            set
-            {
-                projectileSpeed = value;
-                OnStatsChanged(this);
+                if (stats.ContainsKey("projectileSpeed"))
+                {
+                    return stats["projectileSpeed"];
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
         /// <summary>
@@ -73,12 +83,14 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                return speed;
-            }
-            set
-            {
-                speed = value;
-                OnStatsChanged(this);
+                if (stats.ContainsKey("speed"))
+                {
+                    return stats["speed"];
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
         /// <summary>
@@ -88,14 +100,18 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                return range;
-            }
-            set
-            {
-                range = value;
-                OnStatsChanged(this);
+                if (stats.ContainsKey("range"))
+                {
+                    return stats["range"];
+                }
+                else
+                {
+                    return 0;
+                }
             }
         }
+
+        Dictionary<string, float> stats;
         #endregion
 
         #region Observer interface
@@ -103,14 +119,50 @@ namespace GameLogic.EntityStats
         public StatsChanged OnStatsChanged;
         #endregion
 
+        private void Awake()
+        {
+            stats = new Dictionary<string, float>();
+        }
+
+        /// <summary>
+        /// 设置属性
+        /// </summary>
+        /// <param name="name">名字</param>
+        /// <param name="value"></param>
+        public void SetValue(string name, float value)
+        {
+            if (stats.ContainsKey(name))
+            {
+                stats[name] = value;
+            }
+            OnStatsChanged(this);
+        }
+
+        public void AddProperty(string name,float value)
+        {
+            if (stats.ContainsKey(name))
+            {
+                stats[name] = value;
+            }
+            else
+            {
+                stats.Add(name, value);
+            }
+            OnStatsChanged(this);
+        }
+
         /// <summary>
         /// 初始化所有属性
         /// </summary>
-        abstract protected void InitializeStats();
-
-        private void Start()
+        public void InitializeStats(StatData statData)
         {
-            InitializeStats();
+            AddProperty("health", statData.health);
+            AddProperty("attack", statData.attack);
+            AddProperty("shootingSpeed", statData.shootingSpeed);
+            AddProperty("projectileSpeed", statData.projectileSpeed);
+            AddProperty("speed", statData.speed);
+            AddProperty("range", statData.range);
         }
+
     }
 }

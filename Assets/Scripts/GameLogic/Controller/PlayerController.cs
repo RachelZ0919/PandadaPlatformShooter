@@ -33,9 +33,11 @@ namespace GameLogic.Controller
         {
             movingBehavior.MoveInDirection(movingJoystick.Direction.x);
 
-            if (Input.GetKeyDown(KeyCode.Space))
+
+            Vector2 shootingDirection = shootingJoystick.Direction;
+            if(shootingDirection.magnitude > 0.5f)
             {
-                movingBehavior.Jump();
+                shootingBehavior.Shoot(shootingDirection);
             }
         
             //todo : 人物移动控制

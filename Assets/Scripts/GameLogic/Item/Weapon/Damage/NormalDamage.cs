@@ -8,7 +8,7 @@ namespace GameLogic.Item.Weapon
     {
         public override void DealDamage(Stats stat)
         {
-            stat.health = stat.health - damage;
+            stat.SetValue("health", stat.health - damage);
         }
     }
 }

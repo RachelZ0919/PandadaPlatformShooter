@@ -5,24 +5,23 @@ using GameLogic.EntityBehavior;
 namespace GameLogic.Item.Weapon
 {
     /// <summary>
-    /// 枪种类武器的基类
+    /// 枪种类武器的逻辑
     /// </summary>
     abstract public class Weapon : MonoBehaviour,IItem
     {
-        //todo:支持多种子弹
+        //todo:支持多种子弹，武器行为不再作为继承关系
         [SerializeField] protected WeaponData weaponData; //基本武器数据
         [SerializeField] protected ProjectileData projectileData; //子弹数据
         protected Transform entity; //持有武器的实体
-        protected bool isPickedUp = false; //当前是否被拾
+        protected bool isPickedUp = false; //当前是否被拾取
 
         //射击用逻辑
         protected float lastShootingTime; //上次射击时间
         protected int projectileLeft; //子弹数量
         protected bool isReloading; //是否在换弹
         private float reloadStartTime; //换弹开始时间
-        protected Vector3 shootingPosition; //子弹生成点
 
-        [SerializeField] private Transform shootingPoint; //
+        [SerializeField] protected Transform shootingPoint; //子弹生成点的Transform
 
         public void PickUp(Transform entity)
         {
@@ -32,32 +31,12 @@ namespace GameLogic.Item.Weapon
             if(behavior != null)
             {
                 behavior.weapon = this; //给射击动作这把武器
+                transform.parent = behavior.holdingPoint;//把武器设置成实体子物体
+                transform.localPosition = Vector3.zero;
             }
 
-            //计算对象池大小
-            //todo:同时要考虑基础属性
-            float length = Mathf.Min(10, weaponData.range); //前者是场景大小获得的经验值，场景比例改变，就要修改这个。
-            float projectileLife = length / weaponData.projectileSpeed; //子弹从发射到消亡的平均时间
-            float totalClips = projectileLife / (weaponData.projectilesPerClip /
-                                      weaponData.shootingSpeed + weaponData.cooldownTime); //从发射到消亡能发射的子弹数量（以弹夹为单位） = 平均时间 / （一弹夹子弹量 * 子弹发射时间间隔 + 换弹时间）
-            int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹
-            //生成子弹对象
-            Projectile projectilePrefab = projectileData.GenerateProjectile();
-            //设置子弹碰撞层
-            LayerMask layermaskToHit = 1 << 8 | 1 << 9 | 1 << 10;
-            layermaskToHit &= ~(1 << gameObject.layer);
-            projectilePrefab.layermaskToHit = layermaskToHit;
-            //设置子弹所属对象池
-            projectilePrefab.poolName = weaponData.weaponName;
-            //申请对象池
-            ProjectilePool.instance.AddPool(weaponData.weaponName, null, poolSize, false);
-
+            InitializeGun();
             //todo:枪显示
-
-            //枪初始化
-            lastShootingTime = Time.time - weaponData.shootingSpeed;
-            projectileLeft = weaponData.projectilesPerClip;
-            isReloading = false;
         }
 
         virtual protected void Update()
@@ -92,6 +71,40 @@ namespace GameLogic.Item.Weapon
         /// </summary>
         /// <param name="direction">方向</param>
         /// <param name="baseStats">影响最终输出的人物参数</param>
-        abstract public void Shoot(Vector2 direction , ShootingBaseStats baseStats);
+        abstract public void Shoot(Vector2 direction, ShootingBaseStats baseStats);
+
+        /// <summary>
+        /// 注册对象池
+        /// </summary>
+        public void RegisterPool()
+        {
+            //计算对象池大小
+            //todo:同时要考虑基础属性
+            float length = Mathf.Min(10, weaponData.range) * 5; //前者是场景大小获得的经验值，场景比例改变，就要修改这个。
+            float projectileLife = length / weaponData.projectileSpeed; //子弹从发射到消亡的平均时间
+            float totalClips = projectileLife / (weaponData.projectilesPerClip /
+                                      weaponData.shootingSpeed + weaponData.cooldownTime); //从发射到消亡能发射的子弹数量（以弹夹为单位） = 平均时间 / （一弹夹子弹量 * 子弹发射时间间隔 + 换弹时间）
+            int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹
+            //申请对象池
+            ProjectilePool.instance.AddPool(weaponData.weaponName, projectileData, poolSize, false);
+        }
+
+        /// <summary>
+        /// 枪初始化
+        /// </summary>
+        public void InitializeGun()
+        {
+            //注册子弹池
+            RegisterPool();
+            //枪初始化
+            lastShootingTime = Time.time - weaponData.shootingSpeed;
+            projectileLeft = weaponData.projectilesPerClip;
+            isReloading = false;
+        }
+
+        virtual protected void OnDestroy()
+        {
+            ProjectilePool.instance.DeletePool(weaponData.weaponName);//删除子弹池
+        }
     }
 }

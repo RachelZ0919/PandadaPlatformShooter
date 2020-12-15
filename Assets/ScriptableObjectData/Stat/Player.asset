@@ -9,13 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74bc3a6195edc5140b7680524af30220, type: 3}
-  m_Name: Gun1
+  m_Script: {fileID: 11500000, guid: 8d5f5ea31403cf64bab8840ec3c64f3c, type: 3}
+  m_Name: Player
   m_EditorClassIdentifier: 
-  weaponName: GunA
-  projectilesPerClip: 100
-  cooldownTime: 0
-  attack: 10
-  projectileSpeed: 20
-  shootingSpeed: 2
-  range: 100
+  health: 10
+  attack: 3
+  shootingSpeed: 0
+  projectileSpeed: 0
+  speed: 10
+  range: 0
+  defaultWeapon: {fileID: 4896134030240479185, guid: e1d61763a1a77ab48b07bc895386ee79,
+    type: 3}

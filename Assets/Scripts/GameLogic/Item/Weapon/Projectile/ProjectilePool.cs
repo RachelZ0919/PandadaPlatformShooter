@@ -14,7 +14,7 @@ namespace GameLogic.Item.Weapon
         private struct Pool
         {
             public bool destroyOnLoad;
-            public GameObject prefab;
+            public ProjectileData projectileData;
             public Queue<Projectile> pool;
         }
         static public ProjectilePool instance;
@@ -86,8 +86,8 @@ namespace GameLogic.Item.Weapon
         /// <param name="projectile">子弹Prefab</param>
         /// <param name="size">池的大小</param>
         /// <param name="destroyOnLoad">子弹是否在场景切换时销毁</param>
-        public void AddPool(string user, GameObject projectile, int size, bool destroyOnLoad)
-        {
+        public void AddPool(string user, ProjectileData projectile, int size, bool destroyOnLoad)
+        { 
             if (poolDictionary.ContainsKey(user))
             {
                 Pool pool = poolDictionary[user];
@@ -110,13 +110,14 @@ namespace GameLogic.Item.Weapon
                 else
                 {
                     //扩充原有的对象池
-                    int addCount = size - projectilePool.Count;
-                    for (int i = 0; i < addCount; i++)
+                    //int addCount = size - projectilePool.Count;
+                    for (int i = 0; i < size; i++)
                     {
-                        GameObject obj = Instantiate(projectile);
-                        if(!destroyOnLoad)  DontDestroyOnLoad(obj);
-                        obj.SetActive(false);
-                        projectilePool.Enqueue(obj.GetComponent<Projectile>());
+                        Projectile proj = projectile.GenerateProjectile();
+                        proj.poolName = user;
+                        if(!destroyOnLoad)  DontDestroyOnLoad(proj.gameObject);
+                        proj.gameObject.SetActive(false);
+                        projectilePool.Enqueue(proj);
                     }
                 }
             }
@@ -125,13 +126,14 @@ namespace GameLogic.Item.Weapon
                 //创建一个新的对象池
                 Queue<Projectile> projectilePool = new Queue<Projectile>();
                 Pool pool = new Pool();
-                pool.prefab = projectile;
+                pool.projectileData = projectile;
                 for (int i = 0; i < size; i++)
                 {
-                    GameObject obj = Instantiate(projectile);
-                    if (!destroyOnLoad) DontDestroyOnLoad(obj);
-                    obj.SetActive(false);
-                    projectilePool.Enqueue(obj.GetComponent<Projectile>());
+                    Projectile proj = projectile.GenerateProjectile();
+                    proj.poolName = user;
+                    if (!destroyOnLoad) DontDestroyOnLoad(proj.gameObject);
+                    proj.gameObject.SetActive(false);
+                    projectilePool.Enqueue(proj);
                 }
                 pool.destroyOnLoad = destroyOnLoad;
                 pool.pool = projectilePool;
@@ -161,10 +163,11 @@ namespace GameLogic.Item.Weapon
             {
                 for(int i = 0; i < 5; i++)
                 {
-                    GameObject obj = Instantiate(pool.prefab);
-                    if (!pool.destroyOnLoad) DontDestroyOnLoad(obj);
-                    obj.SetActive(false);
-                    projectiles.Enqueue(obj.GetComponent<Projectile>());
+                    Projectile proj = pool.projectileData.GenerateProjectile();
+                    proj.poolName = user;
+                    if (!pool.destroyOnLoad) DontDestroyOnLoad(proj.gameObject);
+                    proj.gameObject.SetActive(false);
+                    pool.pool.Enqueue(proj);
                 }
             }
 
@@ -212,7 +215,8 @@ namespace GameLogic.Item.Weapon
             Queue<Projectile> projectiles = poolDictionary[user].pool;
             while(projectiles.Count > 0)
             {
-                Destroy(projectiles.Dequeue().gameObject);
+                Projectile projectile = projectiles.Dequeue();
+                if(projectile != null)  Destroy(projectile.gameObject);
             }
             poolDictionary.Remove(user);
 

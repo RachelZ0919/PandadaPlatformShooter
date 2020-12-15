@@ -13,13 +13,14 @@ namespace GameLogic.Item.Weapon
                 Projectile projectile = ProjectilePool.instance.SpawnAProjectile(weaponData.weaponName);
 
                 //todo：射子弹
+                projectile.layermaskToHit = 1 << 8 | 1 << 9 | 1 << 10;
+                projectile.layermaskToHit &= ~(1 << gameObject.layer);
                 projectile.damage.damage = weaponData.attack + baseStats.baseAttack;
                 projectile.speed = weaponData.projectileSpeed + baseStats.baseProjectileSpeed;
                 projectile.range = weaponData.range + baseStats.baseRange;
-                projectile.Launch(transform.position, direction);
+                projectile.Launch(shootingPoint.position, direction);
 
                 //todo: 后坐力
-
                 lastShootingTime = Time.time;
                 projectileLeft--;
                 if(projectileLeft <= 0)

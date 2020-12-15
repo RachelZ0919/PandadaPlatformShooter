@@ -29,9 +29,22 @@ namespace GameLogic.Item.Weapon
         public Projectile GenerateProjectile()
         {
             GameObject projectile = new GameObject();
-            projectile.AddComponent<Rigidbody2D>();
-            SpriteRenderer spriteRenderer = projectile.AddComponent<SpriteRenderer>();
+
+            //设置图片
+            GameObject spriteObject = new GameObject();
+            spriteObject.transform.parent = projectile.transform;
+            SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
             spriteRenderer.sprite = projectileImage;
+
+            //设置碰撞体
+            Collider2D collider = projectile.AddComponent<CircleCollider2D>();
+            collider.isTrigger = true;
+
+            //设置刚体
+            Rigidbody2D rigidbody = projectile.AddComponent<Rigidbody2D>();
+            rigidbody.gravityScale = 0;
+
+           
             switch (type)
             {
                 case ProjectileType.Straight:
