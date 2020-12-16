@@ -6,7 +6,7 @@ using GameLogic.Item.Weapon;
 
 namespace GameLogic.Managers
 {
-    [RequireComponent(typeof(MovingBehavior),typeof(ShootingBehavior),typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Stats),typeof(Animator),typeof(SpriteRenderer))]
     /// <summary>
     /// 负责管理玩家属性
@@ -20,18 +20,26 @@ namespace GameLogic.Managers
         {
             //初始化角色属性
             GetComponent<Stats>().InitializeStats(statData);
-            //初始化枪
-            Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
-            weapon.PickUp(transform);
+            ShootingBehavior shootingBehavior = GetComponent<ShootingBehavior>();
+            MovingBehavior movingBehavior = GetComponent<MovingBehavior>();
+            HitBehavior hitBehavior = GetComponent<HitBehavior>();
 
-            if(usingAudio == null)
+            //初始化枪
+            if(shootingBehavior != null)
             {
-                //todo : 使用默认的
+                Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
+                weapon.PickUp(transform);
+                shootingBehavior.audio = usingAudio;
             }
-            else
+
+            if(movingBehavior != null)
             {
-                GetComponent<ShootingBehavior>().audio = usingAudio;
-                GetComponent<MovingBehavior>().audio = usingAudio;
+                movingBehavior.audio = usingAudio;
+            }
+
+            if (hitBehavior != null)
+            {
+                hitBehavior.audio = usingAudio;
             }
         }
     }

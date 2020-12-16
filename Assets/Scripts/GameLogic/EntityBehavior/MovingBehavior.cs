@@ -7,8 +7,6 @@ namespace GameLogic.EntityBehavior
     [RequireComponent(typeof(Rigidbody2D))]
     public class MovingBehavior : MonoBehaviour
     {
-        //todo:移动行为设置相关参数与函数（包含Editor）
-
         private Rigidbody2D rigidbody; //人物rigidbody2D组件
         private Animator animator; // 人物animator
         private float direction; // 人物移动方向
@@ -64,7 +62,6 @@ namespace GameLogic.EntityBehavior
             float xSpeed = rigidbody.velocity.x;
             float ySpeed = rigidbody.velocity.y;
             
-            //todo : 把加速度与速度关联，不再用clamp函数
             if (isAccelerating)//人物正常移动
             {
                 xSpeed += lastDirection * startAcc * Time.deltaTime;
@@ -106,14 +103,16 @@ namespace GameLogic.EntityBehavior
         {
             if (isOnGround)//检测是否在地面
             {
-                int layerMask = LayerMask.GetMask("Scene");
+                int layerMask = 1<<8 | 1<<9 | 1<<10;
                 Vector3 positionOffset = new Vector3(width / 2, 0, 0);
                 bool hitNothing = true;
 
-                //左右各测一次是否接触地面，如果均没有接触，就说明没有在地面上。
+                //左右中各测一次是否接触地面，如果均没有接触，就说明没有在地面上。
                 RaycastHit2D hit = Physics2D.Raycast(transform.position + positionOffset , Vector2.down, height/2 + 0.1f , layerMask);
                 if (hit) hitNothing = false;
                 hit = Physics2D.Raycast(transform.position - positionOffset, Vector2.down, height / 2 + 0.1f, layerMask);
+                if (hit) hitNothing = false;
+                hit = Physics2D.Raycast(transform.position, Vector2.down, height / 2 + 0.1f, layerMask);
                 if (hit) hitNothing = false;
                 
                 if (hitNothing)

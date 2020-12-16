@@ -171,10 +171,8 @@ namespace AI.FSM
         {
             if (Vector3.Distance(transform.position, position) > stopDistance && canMove)
             {
-                float step = moveSpeed * Time.deltaTime;
                 Vector3 moveDirection = position - transform.position;
                 movingBehavior.MoveInDirection(moveDirection.x);
-                //transform.position = Vector3.MoveTowards(transform.position, position, step);
             }
         }
 

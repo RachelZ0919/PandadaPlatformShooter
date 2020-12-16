@@ -52,10 +52,6 @@ namespace GameLogic.Controller
             {
                 shootingBehavior.Shoot(shootingDirection);
             }
-        
-            //todo : 人物移动控制
-            //todo : 人物射击控制
-            //todo : 瞄准辅助（可能换到ShootingBehavior下实现）
         }
     }
 }

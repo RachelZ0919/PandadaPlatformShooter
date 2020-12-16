@@ -49,7 +49,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 13c84b96dc72c9e43bd98116b266a34c, type: 2}
   projectileData: {fileID: 11400000, guid: b17625ca88db98e46b07facda437201d, type: 2}
   shootingPoint: {fileID: 4896134030357160730}
-  shootingAudio: {fileID: 8300000, guid: 39253b2e016dc6545bf2f427abe9b739, type: 3}
+  shootingAudio: {fileID: 8300000, guid: 696af79f267cfc24e8052157086eec53, type: 3}
 --- !u!212 &4896134030240479186
 SpriteRenderer:
   m_ObjectHideFlags: 0
