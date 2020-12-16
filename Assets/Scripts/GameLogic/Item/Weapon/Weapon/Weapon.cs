@@ -67,7 +67,7 @@ namespace GameLogic.Item.Weapon
             }
 
             //射击动画
-            animator.SetFloat("shootingTime", Time.time - lastShootingTime);
+            if(animator != null)    animator.SetFloat("shootingTime", Time.time - lastShootingTime);
 
             //后坐力回复
             if(Vector3.Distance(transform.localPosition,Vector3.zero) > 0.01f)
