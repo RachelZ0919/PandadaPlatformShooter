@@ -42,7 +42,7 @@ namespace AI.FSM
         private int index;
         private void LoopPatrolling(FSMBase fsm)
         {
-            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 0.5f)
+            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 1f)
             {
                 index = (index + 1) % fsm.wayPoints.Length;
             }
@@ -52,7 +52,7 @@ namespace AI.FSM
 
         private void PingPongPatrolling(FSMBase fsm)
         {
-            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 0.5f)
+            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 0.5)
             {
                 if (index == fsm.wayPoints.Length - 1)
                 {

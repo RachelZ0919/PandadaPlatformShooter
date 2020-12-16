@@ -18,11 +18,11 @@ namespace GameLogic.EntityBehavior
         private float width; //角色宽度
         private float height; //角色高度
 
-        [SerializeField] private float startAcc = 30; //起跑加速度
-        [SerializeField] private float stopAcc = 50; //停止加速度
-        [SerializeField] private float turnAcc = 55; //转向加速度
+        [SerializeField] private float startAcc = 50; //起跑加速度
+        [SerializeField] private float stopAcc = 80; //停止加速度
+        [SerializeField] private float turnAcc = 90; //转向加速度
 
-        [SerializeField] private float jumpForce = 10; //跳跃高度
+        [SerializeField] private float jumpForce = 25; //跳跃高度
         [SerializeField] private int jumpingBufferFrame = 3; //跳跃缓冲帧
 
         private bool isAccelerating;
