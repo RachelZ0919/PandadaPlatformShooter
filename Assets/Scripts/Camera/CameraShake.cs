@@ -14,6 +14,7 @@ namespace CameraLogic
         private float shakeIntensity; //抖屏强度
         private float shakeFadeSpeed; //抖屏减弱速度
         private float shakeRotation; //抖屏旋转强度
+        private Vector3 originPosigion; //原位置
 
         /// <summary>
         /// 是否要旋转
@@ -28,6 +29,7 @@ namespace CameraLogic
         {
             if(instance == null)
             {
+                originPosigion = transform.position;
                 instance = this;
             }
             else
@@ -50,6 +52,10 @@ namespace CameraLogic
                 //抖屏
                 transform.position += new Vector3(xAmount, yAmount, 0);
                 if (allowRotation)  transform.rotation = Quaternion.Euler(0f, 0f, shakeRotation * Random.Range(-1f, 1f));
+            }
+            else
+            {
+                transform.position = originPosigion;
             }
         }
 

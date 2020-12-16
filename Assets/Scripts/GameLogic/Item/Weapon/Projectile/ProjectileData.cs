@@ -13,6 +13,7 @@ namespace GameLogic.Item.Weapon
     /// </summary>
     public class ProjectileData : ScriptableObject
     {
+        [HideInInspector] public GameObject projectilePrefab;
         /// <summary>
         /// 子弹样式
         /// </summary>
@@ -25,26 +26,23 @@ namespace GameLogic.Item.Weapon
         /// 子弹类型
         /// </summary>
         public ProjectileType type;
+        /// <summary>
+        /// 子弹碰撞体（圆形）半径
+        /// </summary>
+        public float size;
 
         public Projectile GenerateProjectile()
         {
-            GameObject projectile = new GameObject();
+            GameObject projectile = Instantiate(projectilePrefab);
 
             //设置图片
-            GameObject spriteObject = new GameObject();
-            spriteObject.transform.parent = projectile.transform;
-            SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
-            spriteRenderer.sprite = projectileImage;
+            SpriteRenderer projectileSprite = projectile.transform.Find("sprite").GetComponent<SpriteRenderer>();
+            projectileSprite.sprite = projectileImage;
 
-            //设置碰撞体
-            Collider2D collider = projectile.AddComponent<CircleCollider2D>();
-            collider.isTrigger = true;
+            //设置碰撞体大小
+            CircleCollider2D collider = projectile.GetComponent<CircleCollider2D>();
+            collider.radius = size;
 
-            //设置刚体
-            Rigidbody2D rigidbody = projectile.AddComponent<Rigidbody2D>();
-            rigidbody.gravityScale = 0;
-
-           
             switch (type)
             {
                 case ProjectileType.Straight:

@@ -23,6 +23,10 @@ namespace GameLogic.Item.Weapon
 
         [SerializeField] protected Transform shootingPoint; //子弹生成点的Transform
 
+        //动画
+        private Animator animator;
+        private Vector3 dampVelocity;
+
         public void PickUp(Transform entity)
         {
             //可能要提前判断一下entity能不能拾取，也可能不需要，pickingBehavior管这个
@@ -39,6 +43,12 @@ namespace GameLogic.Item.Weapon
             //todo:枪显示
         }
 
+
+        virtual protected void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
+
         virtual protected void Update()
         {
             //换弹倒数
@@ -51,6 +61,20 @@ namespace GameLogic.Item.Weapon
                     //todo:关闭UI
                 }
             }
+
+            //射击动画
+            animator.SetFloat("shootingTime", Time.time - lastShootingTime);
+
+            //后坐力回复
+            if(Vector3.Distance(transform.localPosition,Vector3.zero) > 0.01f)
+            {
+                transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref dampVelocity, 0.2f);
+            }
+            else
+            {
+                transform.localPosition = Vector3.zero;
+            }
+            
         }
 
         /// <summary>
@@ -76,7 +100,7 @@ namespace GameLogic.Item.Weapon
         /// <summary>
         /// 注册对象池
         /// </summary>
-        public void RegisterPool()
+        private void RegisterPool()
         {
             //计算对象池大小
             //todo:同时要考虑基础属性
@@ -100,6 +124,16 @@ namespace GameLogic.Item.Weapon
             lastShootingTime = Time.time - weaponData.shootingSpeed;
             projectileLeft = weaponData.projectilesPerClip;
             isReloading = false;
+        }
+
+        /// <summary>
+        /// 应用后坐力
+        /// </summary>
+        /// <param name="direction">射击方向</param>
+        protected void ApplyRecoilForce()
+        {
+            Vector2 deltaPosition = Vector2.left * weaponData.recoilForce;
+            transform.localPosition = new Vector3(deltaPosition.x, deltaPosition.y, 0);
         }
 
         virtual protected void OnDestroy()

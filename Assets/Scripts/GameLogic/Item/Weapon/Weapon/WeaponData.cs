@@ -42,5 +42,10 @@ namespace GameLogic.Item.Weapon
         /// 射击距离
         /// </summary>
         public float range;
+
+        /// <summary>
+        /// 后坐力大小
+        /// </summary>
+        public float recoilForce;
     }
 }

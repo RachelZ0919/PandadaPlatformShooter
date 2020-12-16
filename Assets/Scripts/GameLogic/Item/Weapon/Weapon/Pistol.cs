@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GameLogic.EntityBehavior;
+using CameraLogic;
 
 namespace GameLogic.Item.Weapon
 {
@@ -12,7 +13,7 @@ namespace GameLogic.Item.Weapon
             {
                 Projectile projectile = ProjectilePool.instance.SpawnAProjectile(weaponData.weaponName);
 
-                //todo：射子弹
+                //射子弹
                 projectile.layermaskToHit = 1 << 8 | 1 << 9 | 1 << 10;
                 projectile.layermaskToHit &= ~(1 << gameObject.layer);
                 projectile.damage.damage = weaponData.attack + baseStats.baseAttack;
@@ -20,7 +21,12 @@ namespace GameLogic.Item.Weapon
                 projectile.range = weaponData.range + baseStats.baseRange;
                 projectile.Launch(shootingPoint.position, direction);
 
-                //todo: 后坐力
+                //后坐力
+                ApplyRecoilForce();
+
+                //抖屏
+                CameraShake.instance.ShakeScreen(0.1f, 0.05f);
+
                 lastShootingTime = Time.time;
                 projectileLeft--;
                 if(projectileLeft <= 0)

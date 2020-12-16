@@ -32,7 +32,6 @@ namespace GameLogic.EntityBehavior
         private bool isOnGround;
         private int leavingGroundJumpingFrame; //离地后的跳跃缓冲
         private int fallingJumpingFrame; //落地前的跳跃缓冲
-        
 
 
         private void Awake()
@@ -93,6 +92,9 @@ namespace GameLogic.EntityBehavior
                 
             }
 
+            animator.SetFloat("xspeed", Mathf.Abs(xSpeed));
+            animator.SetFloat("yspeed", ySpeed);
+            animator.SetBool("isOnGround", isOnGround);
             rigidbody.velocity = new Vector2(xSpeed, ySpeed);
         }
 

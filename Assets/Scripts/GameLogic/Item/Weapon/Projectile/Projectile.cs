@@ -16,7 +16,7 @@ namespace GameLogic.Item.Weapon
         /// <summary>
         /// 子弹击中后理应造成的伤害
         /// </summary>
-        public Damage damage { get; set; } //todo:伤害类型可以复杂化，未来在这里修改
+        public Damage damage { get; set; }
         /// <summary>
         /// 子弹速度
         /// </summary>
@@ -31,21 +31,29 @@ namespace GameLogic.Item.Weapon
         public string poolName { protected get; set; }
 
         protected Rigidbody2D rigidbody;
+        protected Collider2D collider;
+        
 
+        public bool isDead;
 
         private void Awake()
         {
             rigidbody = GetComponent<Rigidbody2D>();
+            collider = GetComponent<Collider2D>();
         }
 
-        protected virtual void OnCollisionEnter2D(Collision2D collision)
+
+        protected virtual void OnTriggerEnter2D(Collider2D collision)
         {
             //判断是不是在应该撞的layer
-            if (((1 << collision.gameObject.layer) & layermaskToHit) > 0)
+            if (!isDead && ((1 << collision.gameObject.layer) & layermaskToHit) > 0)
             {
-                OnHit(collision.gameObject);
+                Vector3 velocity = rigidbody.velocity.normalized;
+                Vector3 hitEffectPosition = transform.position + velocity * 0.1f;
+                OnHit(collision.gameObject, hitEffectPosition, -velocity);
             }
         }
+
 
         /// <summary>
         /// 初始化子弹行为
@@ -63,13 +71,13 @@ namespace GameLogic.Item.Weapon
         /// 碰撞时调用，击中后行为override这个函数
         /// </summary>
         /// <param name="hitObject">碰撞物体</param>
-        virtual protected void OnHit(GameObject hitObject)
+        abstract protected void OnHit(GameObject hitObject, Vector3 hitPos, Vector3 hitDirection);
+
+        /// <summary>
+        /// 子弹销毁时调用
+        /// </summary>
+        protected void OnDead()
         {
-            Stats stat = hitObject.GetComponent<Stats>();
-            if(stat != null)
-            {
-                damage.DealDamage(stat);
-            }
             ProjectilePool.instance.RecycleProjectile(poolName, this); //回收
         }
     }

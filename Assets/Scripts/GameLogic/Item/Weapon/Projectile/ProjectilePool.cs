@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using UnityEngine.SceneManagement;
 
 namespace GameLogic.Item.Weapon
@@ -22,7 +20,6 @@ namespace GameLogic.Item.Weapon
 
         private void Awake()
         {
-            Debug.Log("Run Awake - " + name);
             if (instance == null)
             {
                 instance = this;

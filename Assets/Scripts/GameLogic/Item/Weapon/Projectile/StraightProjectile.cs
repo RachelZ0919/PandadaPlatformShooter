@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GameLogic.EntityStats;
+using VisualEffect;
 
 namespace GameLogic.Item.Weapon
 {
@@ -20,6 +22,7 @@ namespace GameLogic.Item.Weapon
 
         public override void Initialize()
         {
+            collider.enabled = true;
             rigidbody.velocity = Vector2.zero;
             isLaunched = true;
         }
@@ -34,5 +37,15 @@ namespace GameLogic.Item.Weapon
             isLaunched = true;
         }
 
+        protected override void OnHit(GameObject hitObject, Vector3 hitPos, Vector3 hitDirection)
+        {
+            Stats stat = hitObject.GetComponent<Stats>();
+            if (stat != null)
+            {
+                damage.DealDamage(stat);
+            }
+            EffectPool.instance.PlayEffect("hit_effect", hitPos, hitDirection);
+            OnDead();
+        }
     }
 }
