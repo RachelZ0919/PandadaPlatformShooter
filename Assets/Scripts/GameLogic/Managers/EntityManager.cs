@@ -11,15 +11,22 @@ namespace GameLogic.Managers
     /// <summary>
     /// 负责管理玩家属性
     /// </summary>
-    public class PlayerManager : MonoBehaviour
+    public class EntityManager : MonoBehaviour
     {
         [SerializeField] private StatData statData;
         [SerializeField] private AudioManager usingAudio;
 
+
+        public delegate void OnDeath(GameObject obj);
+
+        public OnDeath OnObjectDeath;
+
         private void Start()
         {
             //初始化角色属性
-            GetComponent<Stats>().InitializeStats(statData);
+            Stats stat = GetComponent<Stats>();
+            stat.InitializeStats(statData);
+            stat.OnStatsChanged += OnStatChange;
             ShootingBehavior shootingBehavior = GetComponent<ShootingBehavior>();
             MovingBehavior movingBehavior = GetComponent<MovingBehavior>();
             HitBehavior hitBehavior = GetComponent<HitBehavior>();
@@ -40,6 +47,17 @@ namespace GameLogic.Managers
             if (hitBehavior != null)
             {
                 hitBehavior.audio = usingAudio;
+            }
+
+            GameManager.instance.OnObjectCreate(this);
+        }
+
+        private void OnStatChange(Stats stat)
+        {
+            if (stat.health <= 0)
+            {
+                //todo:角色死亡
+                OnObjectDeath(gameObject);
             }
         }
     }
