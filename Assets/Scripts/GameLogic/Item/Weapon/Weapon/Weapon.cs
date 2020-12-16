@@ -27,6 +27,9 @@ namespace GameLogic.Item.Weapon
         private Animator animator;
         private Vector3 dampVelocity;
 
+        //音效
+        public AudioClip shootingAudio;
+
         public void PickUp(Transform entity)
         {
             //可能要提前判断一下entity能不能拾取，也可能不需要，pickingBehavior管这个
@@ -95,7 +98,8 @@ namespace GameLogic.Item.Weapon
         /// </summary>
         /// <param name="direction">方向</param>
         /// <param name="baseStats">影响最终输出的人物参数</param>
-        abstract public void Shoot(Vector2 direction, ShootingBaseStats baseStats);
+        /// <returns>是否射出子弹</returns>
+        abstract public bool Shoot(Vector2 direction, ShootingBaseStats baseStats);
 
         /// <summary>
         /// 注册对象池

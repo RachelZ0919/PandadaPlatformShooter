@@ -50,7 +50,7 @@ namespace CameraLogic
                 //随时间减弱旋转强度
                 shakeRotation = Mathf.MoveTowards(shakeRotation, 0f, shakeFadeSpeed * rotationMultiplier * Time.deltaTime);
                 //抖屏
-                transform.position += new Vector3(xAmount, yAmount, 0);
+                transform.position = originPosigion + new Vector3(xAmount, yAmount, 0);
                 if (allowRotation)  transform.rotation = Quaternion.Euler(0f, 0f, shakeRotation * Random.Range(-1f, 1f));
             }
             else

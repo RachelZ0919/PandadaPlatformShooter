@@ -7,7 +7,7 @@ namespace GameLogic.Item.Weapon
 {
     public class Pistol : Weapon
     {
-        public override void Shoot(Vector2 direction, ShootingBaseStats baseStats)
+        public override bool Shoot(Vector2 direction, ShootingBaseStats baseStats)
         {
             if (!isReloading && Time.time - lastShootingTime > 1 / (weaponData.shootingSpeed + baseStats.baseSpeed)) 
             {
@@ -24,15 +24,18 @@ namespace GameLogic.Item.Weapon
                 //后坐力
                 ApplyRecoilForce();
 
-                //抖屏
-                CameraShake.instance.ShakeScreen(0.1f, 0.05f);
-
                 lastShootingTime = Time.time;
                 projectileLeft--;
                 if(projectileLeft <= 0)
                 {
                     Reload();
                 }
+
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
