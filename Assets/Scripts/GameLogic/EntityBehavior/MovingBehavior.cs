@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GameLogic.Managers;
 
 namespace GameLogic.EntityBehavior
 {
@@ -12,12 +13,12 @@ namespace GameLogic.EntityBehavior
         private Animator animator; // 人物animator
         private float direction; // 人物移动方向
         private float lastDirection; //上一帧人物移动方向
+        private float maxVel; //最大速度
 
         private float width; //角色宽度
         private float height; //角色高度
 
         [SerializeField] private float startAcc = 30; //起跑加速度
-        [SerializeField] private float maxVel = 10; //最大速度
         [SerializeField] private float stopAcc = 50; //停止加速度
         [SerializeField] private float turnAcc = 55; //转向加速度
 
@@ -33,12 +34,15 @@ namespace GameLogic.EntityBehavior
         private int leavingGroundJumpingFrame; //离地后的跳跃缓冲
         private int fallingJumpingFrame; //落地前的跳跃缓冲
 
+        public bool enablePlayingAudio = false;
+        [HideInInspector] public AudioManager audio;
 
         private void Awake()
         {
             rigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
             Vector3 size = GetComponent<SpriteRenderer>().sprite.bounds.size;
+            GetComponent<EntityStats.Stats>().OnStatsChanged += GetSpeed;
             height = size.x;
             width = size.y;
         }
@@ -120,9 +124,7 @@ namespace GameLogic.EntityBehavior
 
                 if(fallingJumpingFrame > 0)
                 {
-                    rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
-                    isOnGround = false;
-                    fallingJumpingFrame = 0;
+                    ExecuteJump();
                 }
             }
         }
@@ -130,7 +132,6 @@ namespace GameLogic.EntityBehavior
 
         private void LateUpdate()
         {
-            //todo : 换一种判断方法，太多bool了
             //判断下一帧状态
             if (direction == 0)
             {
@@ -176,8 +177,7 @@ namespace GameLogic.EntityBehavior
         {
             if (isOnGround || leavingGroundJumpingFrame > 0)
             {
-                rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
-                isOnGround = false;
+                ExecuteJump();
             }
             else
             {
@@ -196,6 +196,24 @@ namespace GameLogic.EntityBehavior
                     leavingGroundJumpingFrame = 0;
                 }
             }
+        }
+
+        //获得速度
+        private void GetSpeed(EntityStats.Stats stats)
+        {
+            maxVel = stats.speed;
+        }
+
+        /// <summary>
+        /// 执行跳跃
+        /// </summary>
+        private void ExecuteJump()
+        {
+            rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
+            audio.PlayAudio("jumpAudio");
+            isOnGround = false;
+            fallingJumpingFrame = 0;
+            leavingGroundJumpingFrame = 0;
         }
     }
 }

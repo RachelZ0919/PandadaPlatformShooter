@@ -16,7 +16,7 @@ MonoBehaviour:
   attack: 3
   shootingSpeed: 0
   projectileSpeed: 0
-  speed: 10
+  speed: 20
   range: 0
   defaultWeapon: {fileID: 4896134030240479185, guid: e1d61763a1a77ab48b07bc895386ee79,
     type: 3}

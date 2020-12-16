@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using GameLogic.Item.Weapon;
 using GameLogic.EntityStats;
+using GameLogic.Managers;
+using CameraLogic;
 
 namespace GameLogic.EntityBehavior
 {
@@ -34,8 +36,11 @@ namespace GameLogic.EntityBehavior
         /// <summary>
         /// 实体当前持有的枪
         /// </summary>
-        public Weapon weapon;
+        [HideInInspector] public Weapon weapon;
+        [HideInInspector] public AudioManager audio;
         public Transform holdingPoint;
+        public bool enableScreenShake = false;
+        public bool enableAudio = true;
         private ShootingBaseStats baseStats; //基础属性
 
         private void Awake()
@@ -62,10 +67,18 @@ namespace GameLogic.EntityBehavior
                 transform.localScale = new Vector3(1, 1, 1);
                 holdingPoint.rotation = Quaternion.Euler(0, 0, angle);
             }
-            
+
+            bool hasShot = weapon.Shoot(direction, baseStats);
+            if (hasShot)
+            {
+                //抖屏
+                if (enableScreenShake) CameraShake.instance.ShakeScreen(0.1f, 0.05f);
+                //音效
+                if (enableAudio && audio != null) audio.PlayAudio(weapon.shootingAudio);
+            }
 
 
-            weapon.Shoot(direction, baseStats);
+
         }
 
         private void FetchEntityStats(Stats stat) //更新射击要用的属性

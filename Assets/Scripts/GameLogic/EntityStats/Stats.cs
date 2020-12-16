@@ -111,6 +111,21 @@ namespace GameLogic.EntityStats
             }
         }
 
+        public float maxHealth
+        {
+            get
+            {
+                if (stats.ContainsKey("maxHealth"))
+                {
+                    return stats["maxHealth"];
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+
         Dictionary<string, float> stats;
         #endregion
 
@@ -138,6 +153,11 @@ namespace GameLogic.EntityStats
             OnStatsChanged(this);
         }
 
+        /// <summary>
+        /// 添加属性
+        /// </summary>
+        /// <param name="name">属性名</param>
+        /// <param name="value">值</param>
         public void AddProperty(string name,float value)
         {
             if (stats.ContainsKey(name))
@@ -152,11 +172,29 @@ namespace GameLogic.EntityStats
         }
 
         /// <summary>
+        /// 获取属性
+        /// </summary>
+        /// <param name="name">属性名</param>
+        /// <returns>属性值</returns>
+        public float GetProperty(string name)
+        {
+            if (stats.ContainsKey(name))
+            {
+                return stats[name];
+            }
+            else
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// 初始化所有属性
         /// </summary>
         public void InitializeStats(StatData statData)
         {
             AddProperty("health", statData.health);
+            AddProperty("maxHealth", statData.health);
             AddProperty("attack", statData.attack);
             AddProperty("shootingSpeed", statData.shootingSpeed);
             AddProperty("projectileSpeed", statData.projectileSpeed);

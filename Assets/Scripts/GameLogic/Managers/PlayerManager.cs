@@ -6,12 +6,15 @@ using GameLogic.Item.Weapon;
 
 namespace GameLogic.Managers
 {
+    [RequireComponent(typeof(MovingBehavior),typeof(ShootingBehavior),typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Stats),typeof(Animator))]
     /// <summary>
     /// 负责管理玩家属性
     /// </summary>
     public class PlayerManager : MonoBehaviour
     {
         [SerializeField] private StatData statData;
+        [SerializeField] private AudioManager usingAudio;
 
         private void Start()
         {
@@ -20,6 +23,16 @@ namespace GameLogic.Managers
             //初始化枪
             Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
             weapon.PickUp(transform);
+
+            if(usingAudio == null)
+            {
+                //使用默认的
+            }
+            else
+            {
+                GetComponent<ShootingBehavior>().audio = usingAudio;
+                GetComponent<MovingBehavior>().audio = usingAudio;
+            }
         }
     }
 }
