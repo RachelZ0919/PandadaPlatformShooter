@@ -10,12 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d5f5ea31403cf64bab8840ec3c64f3c, type: 3}
-  m_Name: New GameLogic.EntityStats.StatData
+  m_Name: Enemy
   m_EditorClassIdentifier: 
-  health: 0
-  attack: 0
+  health: 3
+  attack: 1
   shootingSpeed: 0
   projectileSpeed: 0
-  speed: 0
+  speed: 10
   range: 0
+  knockbackResist: 0
   defaultWeapon: {fileID: 0}

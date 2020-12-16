@@ -7,7 +7,7 @@ using GameLogic.Item.Weapon;
 namespace GameLogic.Managers
 {
     [RequireComponent(typeof(MovingBehavior),typeof(ShootingBehavior),typeof(Rigidbody2D))]
-    [RequireComponent(typeof(Stats),typeof(Animator))]
+    [RequireComponent(typeof(Stats),typeof(Animator),typeof(SpriteRenderer))]
     /// <summary>
     /// 负责管理玩家属性
     /// </summary>
@@ -26,7 +26,7 @@ namespace GameLogic.Managers
 
             if(usingAudio == null)
             {
-                //使用默认的
+                //todo : 使用默认的
             }
             else
             {

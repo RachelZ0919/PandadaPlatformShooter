@@ -43,6 +43,7 @@ namespace GameLogic.Item.Weapon
             }
 
             InitializeGun();
+
             //todo:枪显示
         }
 

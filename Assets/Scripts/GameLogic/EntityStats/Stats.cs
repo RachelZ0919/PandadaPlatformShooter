@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace GameLogic.EntityStats
 {
+    /// <summary>
+    /// 人物属性类
+    /// </summary>
     public class Stats : MonoBehaviour
     {
         #region Stats
@@ -110,7 +113,9 @@ namespace GameLogic.EntityStats
                 }
             }
         }
-
+        /// <summary>
+        /// 最大生命值
+        /// </summary>
         public float maxHealth
         {
             get
@@ -125,14 +130,35 @@ namespace GameLogic.EntityStats
                 }
             }
         }
-
-        Dictionary<string, float> stats;
+        /// <summary>
+        /// 击退抗性
+        /// </summary>
+        public float knockBackResist
+        {
+            get
+            {
+                if (stats.ContainsKey("knockbackResist"))
+                {
+                    return stats["knockbackResist"];
+                }
+                else
+                {
+                    return 0;
+                }
+            }
+        }
+        /// <summary>
+        /// 属性字典
+        /// </summary>
+        private Dictionary<string, float> stats;
         #endregion
 
         #region Observer interface
         public delegate void StatsChanged(Stats stat);
         public StatsChanged OnStatsChanged;
         #endregion
+
+
 
         private void Awake()
         {

@@ -22,9 +22,8 @@ namespace AI.FSM
         public FSMStateID defaultStateID;        
         private FSMState currentState;
 
-        [SerializeField] private StatData statData;
-        private MovingBehavior movingBehavior;
-        public ShootingBehavior shootingBehavior;
+        [HideInInspector] public MovingBehavior movingBehavior;
+        [HideInInspector] public ShootingBehavior shootingBehavior;
 
         public float attackDistance;
         public float sightDistance;
@@ -84,11 +83,6 @@ namespace AI.FSM
         {
             ConfigFSM();
             InitDefaultDtate();
-            //初始化角色属性
-            GetComponent<Stats>().InitializeStats(statData);
-            //初始化枪
-            Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
-            weapon.PickUp(transform);
         }
 
         public FSMStateID test_CurrentStateID;

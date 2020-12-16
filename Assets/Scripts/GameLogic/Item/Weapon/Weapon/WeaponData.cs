@@ -47,5 +47,10 @@ namespace GameLogic.Item.Weapon
         /// 后坐力大小
         /// </summary>
         public float recoilForce;
+
+        /// <summary>
+        /// 击退强度
+        /// </summary>
+        public float knockbackForce;
     }
 }

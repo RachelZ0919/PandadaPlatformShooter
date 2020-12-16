@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using GameLogic.EntityBehavior;
 using GameLogic.EntityStats;
 
 namespace GameLogic.Item.Weapon
@@ -8,6 +9,7 @@ namespace GameLogic.Item.Weapon
     {
         NormalDamage = 1
     }
+
     /// <summary>
     /// 伤害类型基类
     /// </summary>
@@ -18,9 +20,15 @@ namespace GameLogic.Item.Weapon
         /// </summary>
         public float damage { get; set; }
         /// <summary>
-        /// 计算伤害
+        /// 击退强度
+        /// </summary>
+        public float knockbackForce { get; set; }
+        /// <summary>
+        /// 根据stat计算实际伤害，将异常状态和实际伤害传输给受击行为
         /// </summary>
         /// <param name="stat">人物属性</param>
-        abstract public void DealDamage(Stats stat);
+        /// <param name="hitBehavior">受击后行为</param>
+        /// <param name="direction">受击方向，只有x轴</param>
+        abstract public void DealDamage(HitBehavior hitBehavior, Stats stat, Vector2 direction);
     }
 }

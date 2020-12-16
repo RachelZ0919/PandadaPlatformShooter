@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GameLogic.EntityStats;
+using GameLogic.EntityBehavior;
 using VisualEffect;
 
 namespace GameLogic.Item.Weapon
@@ -39,10 +40,11 @@ namespace GameLogic.Item.Weapon
 
         protected override void OnHit(GameObject hitObject, Vector3 hitPos, Vector3 hitDirection)
         {
+            HitBehavior hit = hitObject.GetComponent<HitBehavior>();
             Stats stat = hitObject.GetComponent<Stats>();
-            if (stat != null)
+            if (hit != null && stat != null) 
             {
-                damage.DealDamage(stat);
+                damage.DealDamage(hit, stat, hitDirection.normalized);
             }
             EffectPool.instance.PlayEffect("hit_effect", hitPos, hitDirection);
             OnDead();

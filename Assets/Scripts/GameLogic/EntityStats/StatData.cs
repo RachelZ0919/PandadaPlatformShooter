@@ -30,6 +30,10 @@ namespace GameLogic.EntityStats
         /// </summary>
         public float range;
         /// <summary>
+        /// 击退抗性
+        /// </summary>
+        public float knockbackResist;
+        /// <summary>
         /// 初始武器
         /// </summary>
         public GameObject defaultWeapon;
