@@ -15,7 +15,7 @@ namespace GameLogic.Item.Weapon
 
                 //射子弹
                 projectile.layermaskToHit = 1 << 8 | 1 << 9 | 1 << 10;
-                projectile.layermaskToHit &= ~(1 << gameObject.layer);
+                projectile.layermaskToHit &= ~(1 << transform.parent.gameObject.layer);
                 projectile.damage.damage = weaponData.attack + baseStats.baseAttack;
                 projectile.speed = weaponData.projectileSpeed + baseStats.baseProjectileSpeed;
                 projectile.range = weaponData.range + baseStats.baseRange;

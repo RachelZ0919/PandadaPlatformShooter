@@ -48,6 +48,7 @@ namespace GameLogic.Item.Weapon
             //判断是不是在应该撞的layer
             if (!isDead && ((1 << collision.gameObject.layer) & layermaskToHit) > 0)
             {
+                Debug.Log(collision.name);
                 Vector3 velocity = rigidbody.velocity.normalized;
                 Vector3 hitEffectPosition = transform.position + velocity * 0.1f;
                 OnHit(collision.gameObject, hitEffectPosition, -velocity);
