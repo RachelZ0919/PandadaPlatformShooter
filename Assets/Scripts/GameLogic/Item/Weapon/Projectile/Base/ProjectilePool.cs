@@ -112,7 +112,8 @@ namespace GameLogic.Item.Weapon
                     {
                         Projectile proj = projectile.GenerateProjectile();
                         proj.poolName = user;
-                        if(!destroyOnLoad)  DontDestroyOnLoad(proj.gameObject);
+                        proj.gameObject.name = user + "_projectile";
+                        if (!destroyOnLoad)  DontDestroyOnLoad(proj.gameObject);
                         proj.gameObject.SetActive(false);
                         projectilePool.Enqueue(proj);
                     }
@@ -127,6 +128,7 @@ namespace GameLogic.Item.Weapon
                 for (int i = 0; i < size; i++)
                 {
                     Projectile proj = projectile.GenerateProjectile();
+                    proj.gameObject.name = user + "_projectile";
                     proj.poolName = user;
                     if (!destroyOnLoad) DontDestroyOnLoad(proj.gameObject);
                     proj.gameObject.SetActive(false);
@@ -162,6 +164,7 @@ namespace GameLogic.Item.Weapon
                 {
                     Projectile proj = pool.projectileData.GenerateProjectile();
                     proj.poolName = user;
+                    proj.gameObject.name = user + "_projectile";
                     if (!pool.destroyOnLoad) DontDestroyOnLoad(proj.gameObject);
                     proj.gameObject.SetActive(false);
                     pool.pool.Enqueue(proj);

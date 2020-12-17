@@ -6,6 +6,9 @@ using VisualEffect;
 
 namespace GameLogic.Item.Weapon
 {
+    /// <summary>
+    /// 射程看作距离的直线子弹
+    /// </summary>
     public class StraightProjectile : Projectile
     {
         private Vector2 startPosition = Vector2.zero;

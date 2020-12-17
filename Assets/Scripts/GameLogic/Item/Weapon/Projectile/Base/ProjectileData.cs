@@ -5,7 +5,8 @@ namespace GameLogic.Item.Weapon
 {
     public enum ProjectileType
     {
-        Straight = 1
+        Straight = 1,
+        Beam = 2
     }
 
     /// <summary>
@@ -48,6 +49,12 @@ namespace GameLogic.Item.Weapon
                 case ProjectileType.Straight:
                     {
                         Projectile proj = projectile.AddComponent<StraightProjectile>();
+                        proj.damage = GetDamage();
+                        return proj;
+                    }
+                case ProjectileType.Beam:
+                    {
+                        Projectile proj = projectile.AddComponent<BeamProjecitle>();
                         proj.damage = GetDamage();
                         return proj;
                     }

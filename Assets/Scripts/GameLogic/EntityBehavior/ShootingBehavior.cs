@@ -61,7 +61,8 @@ namespace GameLogic.EntityBehavior
         /// 让枪朝指定方向射出子弹
         /// </summary>
         /// <param name="direction">射击方向</param>
-        public void Shoot(Vector2 direction)
+        /// <returns>是否发射成功</returns>
+        public bool Shoot(Vector2 direction)
         {
             float angle = Vector2.SignedAngle(Vector2.right, direction);
             if (Mathf.Abs(angle) > 90) 
@@ -85,8 +86,7 @@ namespace GameLogic.EntityBehavior
                 if (enableAudio && audio != null) audio.PlayAudio(weapon.shootingAudio);
             }
 
-
-
+            return hasShot;
         }
 
         private void FetchEntityStats(Stats stat) //更新射击要用的属性

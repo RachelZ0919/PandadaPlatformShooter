@@ -7,7 +7,7 @@ using UnityEngine;
 /// </summary>
 public class SearchTarget : MonoBehaviour
 {
-    private Collider2D target;
+    public Collider2D target;
     public bool canAttack = false;
 
     void OnTriggerEnter2D(Collider2D other)

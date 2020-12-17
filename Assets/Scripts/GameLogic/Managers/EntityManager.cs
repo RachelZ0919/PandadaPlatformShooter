@@ -49,7 +49,7 @@ namespace GameLogic.Managers
                 hitBehavior.audio = usingAudio;
             }
 
-            GameManager.instance.OnObjectCreate(this);
+            //GameManager.instance.OnObjectCreate(this);
         }
 
         private void OnStatChange(Stats stat)
