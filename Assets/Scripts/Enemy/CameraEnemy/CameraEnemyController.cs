@@ -8,13 +8,10 @@ using GameLogic.EntityBehavior;
 /// </summary>
 public class CameraEnemyController : MonoBehaviour
 {
-    public SearchTarget seaTarget;
+    public CameraSearchTarget seaTarget;
     public float rayTime = 1f;
     public float attackTime = 1f;
     public float attackCooldownTime = 5f;
-    private bool isRaying = false;
-    private bool isAttacking = false;
-    private float timer = 0;
 
     private ShootingBehavior shootingBehavior;
     private bool hasStartShooting;
@@ -37,22 +34,20 @@ public class CameraEnemyController : MonoBehaviour
     {
         if (hasStartShooting)
         {
+            Debug.Log("laser" + seaTarget.targetPosition);
             hasStartShooting = !shootingBehavior.Shoot(shootingDirection);
+            seaTarget.canAttack = false;
+            seaTarget.canChangePosition = true;
         }
         else if(seaTarget.canAttack)
         {
-            Debug.Log("FindEnemy");
-            shootingDirection = seaTarget.target.transform.position - shootingPoint.position;
+            //Debug.Log("FindEnemy");
+            shootingDirection = seaTarget.targetPosition - shootingPoint.position;
             hasStartShooting = true;
         }
 
-
         //if (seaTarget.canAttack)
         //{
-
-
-
-
         //    if (timer > attackCooldownTime)
         //    {
         //        timer = 0;

@@ -53,7 +53,7 @@ namespace GameLogic.Controller
                 shootingBehavior.Shoot(shootingDirection);
             }
 
-            Debug.Log(movingJoystick.Direction);
+            //Debug.Log(movingJoystick.Direction);
 
             if (movingJoystick.Direction.y > 0.7f) 
             {

@@ -17,17 +17,17 @@ namespace AI.FSM
             if (!fsm.targetTF)
                 return false;
 
-            Debug.Log("发现player");
+            //Debug.Log("发现player");
             rayDirection2 = fsm.targetTF.position - fsm.transform.position;
             LayerMask mask2 = 1 << 9 | 1 << 8;
             RaycastHit2D hit = Physics2D.Raycast(fsm.transform.position, rayDirection2, 150, mask2);
             if (hit)
             {
-                Debug.Log("检测到物体" + hit.collider.name);
+                //Debug.Log("检测到物体" + hit.collider.name);
                 isPlayer2 = hit.transform.CompareTag("Player");
             }
             ischange2 = !isPlayer2 || (Vector3.Distance(fsm.transform.position, fsm.targetTF.position) > fsm.attackDistance);
-            Debug.Log("是否切换"+ischange2);
+            //Debug.Log("是否切换"+ischange2);
             return ischange2;
         }
 
