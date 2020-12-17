@@ -42,7 +42,7 @@ namespace AI.FSM
         private int index;
         private void LoopPatrolling(FSMBase fsm)
         {
-            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 1f)
+            if (fsm.wayPoints[index].GetComponent<Collider2D>().OverlapPoint(fsm.transform.position))
             {
                 index = (index + 1) % fsm.wayPoints.Length;
             }
