@@ -9,7 +9,7 @@ namespace GameLogic.Item.Weapon
     /// </summary>
     abstract public class Weapon : MonoBehaviour,IItem
     {
-        //todo:支持多种子弹，武器行为不再作为继承关系
+        //todo:支持多种子弹
         [SerializeField] protected WeaponData weaponData; //基本武器数据
         [SerializeField] protected ProjectileData projectileData; //子弹数据
         protected Transform entity; //持有武器的实体

@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d5f5ea31403cf64bab8840ec3c64f3c, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
-  health: 10
-  attack: 3
+  health: 3
+  attack: 0
   shootingSpeed: 0
   projectileSpeed: 0
   speed: 20
   range: 0
+  knockbackResist: 0
   defaultWeapon: {fileID: 4896134030240479185, guid: e1d61763a1a77ab48b07bc895386ee79,
     type: 3}

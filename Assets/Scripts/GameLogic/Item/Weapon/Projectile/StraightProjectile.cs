@@ -46,6 +46,7 @@ namespace GameLogic.Item.Weapon
             {
                 damage.DealDamage(hit, stat, hitDirection.normalized);
             }
+            //todo:击中效果优化，击中玩家没有效果
             EffectPool.instance.PlayEffect("hit_effect", hitPos, hitDirection);
             OnDead();
         }

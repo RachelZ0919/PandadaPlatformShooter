@@ -15,9 +15,9 @@ MonoBehaviour:
   weaponName: GunA
   projectilesPerClip: 100
   cooldownTime: 0
-  attack: 10
-  projectileSpeed: 40
-  shootingSpeed: 5
+  attack: 0.5
+  projectileSpeed: 20
+  shootingSpeed: 1
   range: 100
   recoilForce: 2
   knockbackForce: 0

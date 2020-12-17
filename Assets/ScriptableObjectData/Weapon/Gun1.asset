@@ -20,4 +20,4 @@ MonoBehaviour:
   shootingSpeed: 5
   range: 100
   recoilForce: 2
-  knockbackForce: 5
+  knockbackForce: 1

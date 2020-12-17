@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Enemy
   m_EditorClassIdentifier: 
   health: 10
-  attack: 3
+  attack: 0
   shootingSpeed: 0
   projectileSpeed: 0
   speed: 10

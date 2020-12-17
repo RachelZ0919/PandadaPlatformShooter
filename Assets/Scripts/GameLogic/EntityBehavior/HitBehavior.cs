@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using GameLogic.EntityStats;
+using GameLogic.Managers;
 
 namespace GameLogic.EntityBehavior
 {
@@ -18,6 +19,13 @@ namespace GameLogic.EntityBehavior
         private float hitStartTime;
         private Rigidbody2D rigidbody;
         private Animator animator;
+
+        private Vector3 recoverOffset;
+        private Vector3 currentOffset;
+        private Vector3 lastOffset;
+        private Vector3 recoverVel;
+
+        [HideInInspector]public AudioManager audio;
         
 
         private void Awake()
@@ -29,7 +37,16 @@ namespace GameLogic.EntityBehavior
 
         private void Start()
         {
-            
+        }
+
+        private void Update()
+        {
+            if (Vector3.Distance(recoverOffset, currentOffset) > 0.01f) 
+            {
+                currentOffset = Vector3.SmoothDamp(currentOffset, recoverOffset, ref recoverVel, 0.1f);
+                transform.position += currentOffset - lastOffset;
+                lastOffset = currentOffset;
+            }
         }
 
         //todo:异常状态
@@ -37,13 +54,17 @@ namespace GameLogic.EntityBehavior
 
             if (Time.time - hitStartTime >= indivisibleDuration)
             {
+                Debug.Log(name + "isHit");
                 stat.SetValue("health", stat.health - damage);
 
                 //击退
                 if (canGetKnockbacked)
                 {
-                    float knockBack = Mathf.Max(0, knockbackForce - stat.knockBackResist) + 0.5f;
-                    rigidbody.AddForce(direction * knockBack);
+                    Debug.Log("getKnockbacked");
+                    float knockBack = (Mathf.Max(0, knockbackForce - stat.knockBackResist) + 0.5f) * 0.5f;
+                    recoverOffset = direction.normalized * knockBack;
+                    transform.position -= recoverOffset * 1.5f;
+                    lastOffset = currentOffset = Vector3.zero;
                 }
 
                 //视觉
@@ -51,6 +72,9 @@ namespace GameLogic.EntityBehavior
 
                 //无敌状态
                 hitStartTime = Time.time;
+
+                //音效
+                audio.PlayAudio("hitAudio");
             }
         }
 

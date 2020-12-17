@@ -42,11 +42,19 @@ namespace GameLogic.EntityBehavior
         public bool enableScreenShake = false;
         public bool enableAudio = true;
         private ShootingBaseStats baseStats; //基础属性
+        private Vector3 originScale;
+        private Vector3 reverseScale;
 
         private void Awake()
         {
             GetComponent<Stats>().OnStatsChanged += FetchEntityStats;
             baseStats = new ShootingBaseStats();
+        }
+
+        private void Start()
+        {
+            originScale = transform.localScale;
+            reverseScale = new Vector3(-originScale.x, originScale.y, originScale.z);
         }
 
         /// <summary>
@@ -58,13 +66,13 @@ namespace GameLogic.EntityBehavior
             float angle = Vector2.SignedAngle(Vector2.right, direction);
             if (Mathf.Abs(angle) > 90) 
             {
-                transform.localScale = new Vector3(-1, 1, 1);
+                transform.localScale = reverseScale;
                 holdingPoint.rotation = Quaternion.Euler(0, 0, angle - 180);
                 
             }
             else
             {
-                transform.localScale = new Vector3(1, 1, 1);
+                transform.localScale = originScale;
                 holdingPoint.rotation = Quaternion.Euler(0, 0, angle);
             }
 

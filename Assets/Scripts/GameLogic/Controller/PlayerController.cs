@@ -52,10 +52,14 @@ namespace GameLogic.Controller
             {
                 shootingBehavior.Shoot(shootingDirection);
             }
-        
-            //todo : 人物移动控制
-            //todo : 人物射击控制
-            //todo : 瞄准辅助（可能换到ShootingBehavior下实现）
+
+            Debug.Log(movingJoystick.Direction);
+
+            if (movingJoystick.Direction.y > 0.7f) 
+            {
+                Debug.Log("jump");
+                movingBehavior.Jump();
+            }
         }
     }
 }
