@@ -34,7 +34,7 @@ public class CameraEnemyController : MonoBehaviour
     {
         if (hasStartShooting)
         {
-            Debug.Log("laser" + seaTarget.targetPosition);
+            //Debug.Log("laser" + seaTarget.targetPosition);
             hasStartShooting = !shootingBehavior.Shoot(shootingDirection);
             seaTarget.canAttack = false;
             seaTarget.canChangePosition = true;
@@ -45,30 +45,5 @@ public class CameraEnemyController : MonoBehaviour
             shootingDirection = seaTarget.targetPosition - shootingPoint.position;
             hasStartShooting = true;
         }
-
-        //if (seaTarget.canAttack)
-        //{
-        //    if (timer > attackCooldownTime)
-        //    {
-        //        timer = 0;
-        //        //jiguang
-        //        Debug.Log("Ray");
-        //        isRaying = true;
-        //    }
-        //    else if(timer >= 1f && isRaying)
-        //    {
-        //        isRaying = false;
-        //        //gongji
-        //        Debug.Log("attack");
-        //        isAttacking = true;
-        //    }
-        //    else if (timer > 2f && isAttacking)
-        //    {
-        //        isAttacking = false;
-        //        //stop
-        //        Debug.Log("stop");
-        //    }
-        //    timer += Time.deltaTime;
-        //}
     }
 }

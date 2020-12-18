@@ -110,7 +110,6 @@ namespace VisualEffect
 
             effect.SetActive(false);
             poolDictionary[name].Enqueue(effect);
-            
         }
     }
 }

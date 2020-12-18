@@ -11,13 +11,24 @@ namespace AI.FSM
     /// </summary>
     public abstract class FSMState
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public FSMStateID StateID { get; set; }
 
+        /// <summary>
+        /// 触发器和状态
+        /// </summary>
         private Dictionary<FSMTriggerID, FSMStateID> map;
 
-        //条件列表
+        /// <summary>
+        /// 触发器列表
+        /// </summary>
         private List<FSMTrigger> Triggers;
 
+        /// <summary>
+        /// 构造FSMState
+        /// </summary>
         public FSMState()
         {
             map = new Dictionary<FSMTriggerID, FSMStateID>();
@@ -25,16 +36,26 @@ namespace AI.FSM
             Init();
         }
 
+        /// <summary>
+        /// 初始化
+        /// </summary>
         public abstract void Init();
 
+        /// <summary>
+        /// 条件对象和状态机绑定
+        /// </summary>
+        /// <param name="triggerID">条件对象ID</param>
+        /// <param name="stateID">状态机ID</param>
         public void AddMap(FSMTriggerID triggerID, FSMStateID stateID)
         {
             map.Add(triggerID, stateID);
-
             CreateTrigger(triggerID);
         }
 
-        //创建条件对象,由状态机调用
+        /// <summary>
+        /// 创建条件对象
+        /// </summary>
+        /// <param name="triggerID">条件对象ID</param>
         private void CreateTrigger(FSMTriggerID triggerID)
         {
             //命名规范：AI.FSM+条件枚举+Trigger
@@ -43,7 +64,10 @@ namespace AI.FSM
             Triggers.Add(trigger);
         }
 
-        //检测当前状态的条件是否满足
+        /// <summary>
+        /// 检测是否要切换状态
+        /// </summary>
+        /// <param name="fsm">使用的状态机</param>
         public void Reason(FSMBase fsm)
         {
             for (int i = 0; i < Triggers.Count; ++i)

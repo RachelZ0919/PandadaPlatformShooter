@@ -9,9 +9,9 @@ namespace GameLogic.Item.Weapon
     public class WeaponData : ScriptableObject
     {
         /// <summary>
-        /// 武器名字
+        /// 子弹对象池名字
         /// </summary>
-        public string weaponName;
+        public string projectilePoolName;
 
         /// <summary>
         /// 弹夹子弹数量
@@ -44,6 +44,11 @@ namespace GameLogic.Item.Weapon
         public float range;
 
         /// <summary>
+        /// 持续时间，如果是-1就说明按射程计算
+        /// </summary>
+        public float lastTime;
+
+        /// <summary>
         /// 后坐力大小
         /// </summary>
         public float recoilForce;
@@ -52,5 +57,15 @@ namespace GameLogic.Item.Weapon
         /// 击退强度
         /// </summary>
         public float knockbackForce;
+
+        /// <summary>
+        /// 子弹类型
+        /// </summary>
+        public ProjectileData projectile;
+
+        /// <summary>
+        /// 射击音效
+        /// </summary>
+        public AudioClip shootingAudio;
     }
 }

@@ -11,7 +11,6 @@ namespace GameLogic.Item.Weapon
     {
         //todo:支持多种子弹
         [SerializeField] protected WeaponData weaponData; //基本武器数据
-        [SerializeField] protected ProjectileData projectileData; //子弹数据
         protected Transform entity; //持有武器的实体
         protected bool isPickedUp = false; //当前是否被拾取
 
@@ -21,17 +20,37 @@ namespace GameLogic.Item.Weapon
         protected bool isReloading; //是否在换弹
         private float reloadStartTime; //换弹开始时间
 
-        [SerializeField] protected Transform shootingPoint; //子弹生成点的Transform
-
         //动画
-        private Animator animator;
+        protected Animator animator;
         private Vector3 dampVelocity;
 
         //音效
-        public AudioClip shootingAudio;
+        public AudioClip shootingAudio
+        {
+            get
+            {
+                return weaponData.shootingAudio;
+            }
+        }
 
         public void PickUp(Transform entity)
         {
+            isPickedUp = true;
+
+            Collider2D collider = GetComponent<Collider2D>();
+            if (collider != null)
+            {
+                collider.enabled = false;
+            }
+
+            Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
+            if(rigidbody != null)
+            {
+                rigidbody.bodyType = RigidbodyType2D.Static;
+                rigidbody.simulated = false;
+            }
+
+
             //可能要提前判断一下entity能不能拾取，也可能不需要，pickingBehavior管这个
             this.entity = entity;
             ShootingBehavior behavior = entity.GetComponent<ShootingBehavior>();
@@ -40,6 +59,7 @@ namespace GameLogic.Item.Weapon
                 behavior.weapon = this; //给射击动作这把武器
                 transform.parent = behavior.holdingPoint;//把武器设置成实体子物体
                 transform.localPosition = Vector3.zero;
+                transform.localRotation = Quaternion.identity;
             }
 
             InitializeGun();
@@ -51,34 +71,38 @@ namespace GameLogic.Item.Weapon
         virtual protected void Awake()
         {
             animator = GetComponent<Animator>();
+            isReloading = false;
+            isPickedUp = false;
         }
 
         virtual protected void Update()
         {
-            //换弹倒数
-            if (isReloading)
+            if (isPickedUp)
             {
-                //todo：UI显示
-                if(Time.time - reloadStartTime >= weaponData.cooldownTime)
+                //换弹倒数
+                if (isReloading)
                 {
-                    isReloading = false;
-                    //todo:关闭UI
+                    //todo：UI显示
+                    if (Time.time - reloadStartTime >= weaponData.cooldownTime)
+                    {
+                        isReloading = false;
+                        //todo:关闭UI
+                    }
                 }
-            }
 
-            //射击动画
-            if(animator != null)    animator.SetFloat("shootingTime", Time.time - lastShootingTime);
+                //射击动画
+                if (animator != null) animator.SetFloat("shootingTime", Time.time - lastShootingTime);
 
-            //后坐力回复
-            if(Vector3.Distance(transform.localPosition,Vector3.zero) > 0.01f)
-            {
-                transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref dampVelocity, 0.2f);
-            }
-            else
-            {
-                transform.localPosition = Vector3.zero;
-            }
-            
+                //后坐力回复
+                if (Vector3.Distance(transform.localPosition, Vector3.zero) > 0.01f)
+                {
+                    transform.localPosition = Vector3.SmoothDamp(transform.localPosition, Vector3.zero, ref dampVelocity, 0.2f);
+                }
+                else
+                {
+                    transform.localPosition = Vector3.zero;
+                }
+            } 
         }
 
         /// <summary>
@@ -115,7 +139,7 @@ namespace GameLogic.Item.Weapon
                                       weaponData.shootingSpeed + weaponData.cooldownTime); //从发射到消亡能发射的子弹数量（以弹夹为单位） = 平均时间 / （一弹夹子弹量 * 子弹发射时间间隔 + 换弹时间）
             int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹
             //申请对象池
-            ProjectilePool.instance.AddPool(weaponData.weaponName, projectileData, poolSize, false);
+            ProjectilePool.instance.AddPool(weaponData.projectilePoolName, weaponData.projectile, poolSize, false);
         }
 
         /// <summary>
@@ -137,13 +161,32 @@ namespace GameLogic.Item.Weapon
         /// <param name="direction">射击方向</param>
         protected void ApplyRecoilForce()
         {
-            Vector2 deltaPosition = Vector2.left * weaponData.recoilForce;
+            Vector2 deltaPosition = Vector2.left * weaponData.recoilForce * 0.5f;
             transform.localPosition = new Vector3(deltaPosition.x, deltaPosition.y, 0);
         }
 
+        protected Projectile GetAProjectile(ShootingBaseStats baseStats)
+        {
+            //获取子弹
+            Projectile projectile = ProjectilePool.instance.SpawnAProjectile(weaponData.projectilePoolName);
+
+            //射子弹
+            projectile.layermaskToHit = 1 << 8 | 1 << 9 | 1 << 10;
+            projectile.layermaskToHit &= ~(1 << transform.parent.gameObject.layer);
+            projectile.damage.damage = weaponData.attack + baseStats.baseAttack;
+            projectile.damage.knockbackForce = weaponData.knockbackForce;
+            projectile.speed = weaponData.projectileSpeed + baseStats.baseProjectileSpeed;
+            projectile.range = weaponData.range + baseStats.baseRange;
+            projectile.lastTime = weaponData.lastTime;
+
+            return projectile;
+
+        } 
+
         virtual protected void OnDestroy()
         {
-            ProjectilePool.instance.DeletePool(weaponData.weaponName);//删除子弹池
+            ProjectilePool.instance.DeletePool(weaponData.projectilePoolName);//删除子弹池
         }
+
     }
 }

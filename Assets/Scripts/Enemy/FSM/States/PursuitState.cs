@@ -24,8 +24,6 @@ namespace AI.FSM
         public override void EnterState(FSMBase fsm)
         {
             base.EnterState(fsm);
-
-            Debug.Log("追随" + fsm.targetTF.name);
         }
 
         public override void ExitState(FSMBase fsm)

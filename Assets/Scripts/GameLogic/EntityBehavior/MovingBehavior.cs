@@ -32,7 +32,7 @@ namespace GameLogic.EntityBehavior
         private int leavingGroundJumpingFrame; //离地后的跳跃缓冲
         private int fallingJumpingFrame; //落地前的跳跃缓冲
 
-        public bool enablePlayingAudio = false;
+        public bool enableAudio = false;
         [HideInInspector] public AudioManager audio;
 
         private void Awake()

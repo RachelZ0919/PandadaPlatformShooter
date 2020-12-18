@@ -9,6 +9,12 @@ namespace GameLogic.Item.Weapon
         Beam = 2
     }
 
+    public enum ColliderType
+    {
+        Circle = 1,
+        Box = 2
+    }
+
     /// <summary>
     /// 用来生成子弹的数据，在WeaponData内，但projectile本身不用这些数据。
     /// </summary>
@@ -28,7 +34,11 @@ namespace GameLogic.Item.Weapon
         /// </summary>
         public ProjectileType type;
         /// <summary>
-        /// 子弹碰撞体（圆形）半径
+        /// 子弹碰撞体类型
+        /// </summary>
+        public ColliderType colliderType;
+        /// <summary>
+        /// 子弹大小
         /// </summary>
         public float size;
 
@@ -37,12 +47,32 @@ namespace GameLogic.Item.Weapon
             GameObject projectile = Instantiate(projectilePrefab);
 
             //设置图片
-            SpriteRenderer projectileSprite = projectile.transform.Find("sprite").GetComponent<SpriteRenderer>();
+            Transform spriteTransform = projectile.transform.Find("sprite");
+            SpriteRenderer projectileSprite = spriteTransform.GetComponent<SpriteRenderer>();
             projectileSprite.sprite = projectileImage;
 
-            //设置碰撞体大小
-            CircleCollider2D collider = projectile.GetComponent<CircleCollider2D>();
-            collider.radius = size;
+            //设置子弹大小
+            spriteTransform.localScale = new Vector3(size, size, 1);
+
+            //设置碰撞体
+            Collider2D collider = null;
+            switch (colliderType)
+            {
+                case ColliderType.Circle:
+                    {
+                        CircleCollider2D circleCollider = spriteTransform.gameObject.AddComponent<CircleCollider2D>();
+                        collider = circleCollider;
+                        break;
+                    }
+                case ColliderType.Box:
+                    {
+                        BoxCollider2D boxCollider = spriteTransform.gameObject.AddComponent<BoxCollider2D>();
+                        collider = boxCollider;
+                        break;
+                    }
+            }
+
+            collider.isTrigger = true;
 
             switch (type)
             {
@@ -50,12 +80,15 @@ namespace GameLogic.Item.Weapon
                     {
                         Projectile proj = projectile.AddComponent<StraightProjectile>();
                         proj.damage = GetDamage();
+                        proj.collider = collider;
                         return proj;
                     }
                 case ProjectileType.Beam:
                     {
                         Projectile proj = projectile.AddComponent<BeamProjecitle>();
                         proj.damage = GetDamage();
+                        proj.collider = collider;
+                        projectileSprite.drawMode = SpriteDrawMode.Sliced;
                         return proj;
                     }
             }

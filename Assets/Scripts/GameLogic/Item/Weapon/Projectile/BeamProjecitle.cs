@@ -6,11 +6,12 @@ using GameLogic.EntityStats;
 namespace GameLogic.Item.Weapon
 {
     /// <summary>
-    /// 射程看作持续时间的穿透子弹
+    /// 射程是子弹长度的子弹 
     /// </summary>
     public class BeamProjecitle : Projectile
     {
         private float shootStartTime;
+        
 
         public override void Initialize()
         {
@@ -19,17 +20,37 @@ namespace GameLogic.Item.Weapon
 
         private void Update()
         {
-            if(Time.time - shootStartTime > range)
+            if(Time.time - shootStartTime > lastTime)
             {
-                OnDead();
+                DestroyProjectile();
             }
         }
 
         public override void Launch(Vector2 position, Vector2 direction)
         {
-            float angle = Vector2.SignedAngle(Vector2.zero, direction);
-            transform.rotation = Quaternion.Euler(0, 0, angle);
+            float angle = Vector2.SignedAngle(Vector2.right, direction);
+            transform.GetChild(0).transform.rotation = Quaternion.Euler(0, 0, angle);
+            transform.position = position;
+            
             collider.enabled = true;
+
+            spriteRenderer.size = new Vector2(range, spriteRenderer.size.y);
+            collider.offset = new Vector2(range / 2, 0);
+            BoxCollider2D boxCollider = collider.GetComponent<BoxCollider2D>();
+            if(boxCollider == null)
+            {
+                Debug.LogError("The Collider is not boxCollider! Beam must use Box Collider");
+                return;
+            }
+            boxCollider.size = spriteRenderer.size;
+
+            
+            //如果没有预设lasttime，就默认0.3s
+            if(lastTime == 0)
+            {
+                lastTime = 0.3f;
+            }
+
             shootStartTime = Time.time;
         }
 
@@ -39,6 +60,7 @@ namespace GameLogic.Item.Weapon
             Stats stat = hitObject.GetComponent<Stats>();
             if (hit != null && stat != null)
             {
+                Debug.Log("Deal Damage to" + hitObject.name);
                 damage.DealDamage(hit, stat, hitDirection.normalized);
             }
         }

@@ -40,6 +40,8 @@ namespace GameLogic.EntityBehavior
         [HideInInspector] public AudioManager audio;
         public Transform holdingPoint;
         public bool enableScreenShake = false;
+        public float screenShakeIntensity = 0.05f;
+        public float screenShakeTime = 0.1f;
         public bool enableAudio = true;
         private ShootingBaseStats baseStats; //基础属性
         private Vector3 originScale;
@@ -64,6 +66,8 @@ namespace GameLogic.EntityBehavior
         /// <returns>是否发射成功</returns>
         public bool Shoot(Vector2 direction)
         {
+            float oriAngle = transform.eulerAngles.z;
+            Debug.Log(oriAngle);
             float angle = Vector2.SignedAngle(Vector2.right, direction);
             if (Mathf.Abs(angle) > 90) 
             {
@@ -81,7 +85,7 @@ namespace GameLogic.EntityBehavior
             if (hasShot)
             {
                 //抖屏
-                if (enableScreenShake) CameraShake.instance.ShakeScreen(0.1f, 0.05f);
+                if (enableScreenShake) CameraShake.instance.ShakeScreen(screenShakeTime, screenShakeIntensity);
                 //音效
                 if (enableAudio && audio != null) audio.PlayAudio(weapon.shootingAudio);
             }
