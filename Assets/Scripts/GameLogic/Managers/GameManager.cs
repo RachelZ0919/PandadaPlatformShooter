@@ -9,7 +9,7 @@ namespace GameLogic.Managers
 
         private void Awake()
         {
-            if(instance != null)
+            if(instance == null)
             {
                 instance = this;
             }
@@ -21,7 +21,7 @@ namespace GameLogic.Managers
 
         public void CheckDeath(GameObject gameObject)
         {
-            if (gameObject.CompareTag("player"))
+            if (gameObject.CompareTag("Player"))
             {
                 //todo:游戏结束
             }

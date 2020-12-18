@@ -50,17 +50,16 @@ namespace GameLogic.EntityBehavior
         }
 
         //todo:异常状态
-        public void GetHit(float damage, float knockbackForce, Vector2 direction) {
-
+        public void GetHit(float damage, float knockbackForce, Vector2 direction) 
+        {
+            Debug.Log(name + " get hit");
             if (Time.time - hitStartTime >= indivisibleDuration)
             {
-                Debug.Log(name + "isHit");
                 stat.SetValue("health", stat.health - damage);
 
                 //击退
                 if (canGetKnockbacked)
                 {
-                    Debug.Log("getKnockbacked");
                     float knockBack = (Mathf.Max(0, knockbackForce - stat.knockBackResist) + 0.5f) * 0.5f;
                     recoverOffset = direction.normalized * knockBack;
                     transform.position -= recoverOffset * 1.5f;
@@ -74,7 +73,7 @@ namespace GameLogic.EntityBehavior
                 hitStartTime = Time.time;
 
                 //音效
-                audio.PlayAudio("hitAudio");
+                if(audio != null) audio.PlayAudio("hitAudio");
             }
         }
 

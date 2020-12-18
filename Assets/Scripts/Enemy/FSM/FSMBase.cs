@@ -16,41 +16,100 @@ namespace AI.FSM
     /// </summary>
     public class FSMBase : MonoBehaviour
     {
+        #region Variables
+
+        #region State
         private List<FSMState> states;
 
         [Tooltip("默认状态")]
         public FSMStateID defaultStateID;        
         private FSMState currentState;
+        private FSMState defaultState;
 
-        [HideInInspector] public MovingBehavior movingBehavior;
-        [HideInInspector] public ShootingBehavior shootingBehavior;
+        //public FSMStateID test_CurrentStateID;
+        [HideInInspector] public MovingBehavior movingBehavior;//移动
+        [HideInInspector] public ShootingBehavior shootingBehavior;//射击行为
+        [HideInInspector] public Stats chStatus; //人物状态
 
+        #endregion
+
+        #region Target Searching
+        
+        [Tooltip("攻击距离")]
         public float attackDistance;
+        [Tooltip("视野距离")]
         public float sightDistance;
+        [Tooltip("攻击目标标签")]
+        public string[] targetTags = { "Player" };
 
+        [HideInInspector] public Transform targetTF;
+
+
+
+        public float runSpeed = 4f;
+        public float walkSpeed = 2f;
+        [Tooltip("巡逻点")]
+        public Transform[] wayPoints;
+        public PatrolMode patrolMode;
+        public bool isPatrolComplete;
+        #endregion
+
+        #region Moving
+        /// <summary>
+        /// 是否可以移动
+        /// </summary>
+        public bool canMove = true;
+        #endregion
+
+        #endregion
         internal void MoveToTarget(Vector3 position, float attackDistance, object moveSpeed)
         {
             throw new NotImplementedException();
         }
 
-        private FSMState defaultState;
+        #region Initialize
 
-        //初始化状态
-        private void InitDefaultDtate()
+        private void Awake()
+        {
+            InitComponent();
+        }
+
+        private void Start()
+        {
+            ConfigFSM();
+            InitDefaultDtate();
+        }
+
+        /// <summary>
+        /// 设置初始状态
+        /// </summary>
+        private void InitDefaultDtate() 
         {
             defaultState = states.Find(s => s.StateID == defaultStateID);
             currentState = defaultState;
             currentState.EnterState(this);
         }
 
-        //配置状态机，创建对象，设置状态
+        /// <summary>
+        /// 初始化组件
+        /// </summary>
+        private void InitComponent()
+        {
+            movingBehavior = GetComponent<MovingBehavior>();
+            shootingBehavior = GetComponent<ShootingBehavior>();
+            chStatus = GetComponent<Stats>();
+        }
+
+        /// <summary>
+        /// 初始化状态机
+        /// </summary>
         private void ConfigFSM()
         {
             states = new List<FSMState>();
             IdleState idle = new IdleState();
             states.Add(idle);
             DeadState dead = new DeadState();
-            states.Add(dead);     
+            states.Add(dead);
 
             idle.AddMap(FSMTriggerID.NoHealth, FSMStateID.Dead);
             idle.AddMap(FSMTriggerID.SawTarget, FSMStateID.Pursuit);
@@ -74,30 +133,26 @@ namespace AI.FSM
             states.Add(patrolling);
         }
 
-        private void Awake()
-        {
-            InitComponent();
-        }
+        #endregion
 
-        private void Start()
-        {
-            ConfigFSM();
-            InitDefaultDtate();
-        }
 
-        public FSMStateID test_CurrentStateID;
+        #region State Machine
+
 
         //配置状态机，创建状态对象，设置状态
         private void Update()
         {
-            test_CurrentStateID = currentState.StateID;
+            //test_CurrentStateID = currentState.StateID;
             //判断当前状态并执行
             currentState.Reason(this);
             currentState.ActionState(this);
             SearchTarget();
         }
         
-        //切换状态
+        /// <summary>
+        /// 切换状态
+        /// </summary>
+        /// <param name="stateID">状态ID</param>
         public void ChangeActiveState(FSMStateID stateID)
         {
             currentState.ExitState(this); //离开上一个状态
@@ -114,34 +169,40 @@ namespace AI.FSM
             currentState.EnterState(this);
         }
 
-        [HideInInspector] //再面板不显示
-        public Animator anim;
-        [HideInInspector]
-        public Stats chStatus; //人物状态
-        public void InitComponent()
+        #endregion
+
+        #region Moving
+
+        /// <summary>
+        /// 移动到对应位置
+        /// </summary>
+        /// <param name="position">目标位置</param>
+        /// <param name="stopDistance">停止位置</param>
+        /// <param name="moveSpeed">移动速度</param>
+        public void MoveToTarget(Vector3 position, float stopDistance, float moveSpeed)
         {
-            //anim = GetComponentInChildren<Animator>();
-            movingBehavior = GetComponent<MovingBehavior>();
-            shootingBehavior = GetComponent<ShootingBehavior>();
-            chStatus = GetComponent<Stats>();
+            if (Vector3.Distance(transform.position, position) > stopDistance && canMove)
+            {
+                Vector3 moveDirection = position - transform.position;
+                movingBehavior.MoveInDirection(moveDirection.x);
+            }
         }
 
+        /// <summary>
+        /// 停止移动
+        /// </summary>
+        public void StopMove()
+        {
+            canMove = false;
+        }
 
-        #region 寻找攻击目标
-        //[HideInInspector]
-        public Transform targetTF;
+        #endregion
 
-        [Tooltip("攻击目标标签")]
-        public string[] targetTags = { "Player" };
+        #region Target Search
 
-        public float runSpeed = 4f;
-        public float walkSpeed = 2f;
-        [Tooltip("巡逻点")]
-        public Transform[] wayPoints;
-        public PatrolMode patrolMode;
-        public bool isPatrolComplete;
-
-        //寻找满足条件的目标
+        /// <summary>
+        /// 寻找满足条件的目标
+        /// </summary>
         private void SearchTarget()
         {
             List<Transform> targetArr = new List<Transform>();
@@ -164,23 +225,6 @@ namespace AI.FSM
                 targetTF = result[0];
             }
         }
-
-        //移动
-        public bool canMove = true;
-        public void MoveToTarget(Vector3 position, float stopDistance, float moveSpeed)
-        {
-            if (Vector3.Distance(transform.position, position) > stopDistance && canMove)
-            {
-                Vector3 moveDirection = position - transform.position;
-                movingBehavior.MoveInDirection(moveDirection.x);
-            }
-        }
-
-        public void StopMove()
-        {
-            canMove = false;
-        }
-
 
         #endregion
 

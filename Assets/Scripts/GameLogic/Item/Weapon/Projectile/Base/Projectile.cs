@@ -26,12 +26,17 @@ namespace GameLogic.Item.Weapon
         /// </summary>
         public float range { get; set; }
         /// <summary>
+        /// 子弹持续时间
+        /// </summary>
+        public float lastTime { get; set; }
+        /// <summary>
         /// 所属对象池
         /// </summary>
         public string poolName { protected get; set; }
 
+        protected SpriteRenderer spriteRenderer;
         protected Rigidbody2D rigidbody;
-        protected Collider2D collider;
+        [SerializeField] public Collider2D collider;
         
 
         public bool isDead;
@@ -39,16 +44,16 @@ namespace GameLogic.Item.Weapon
         private void Awake()
         {
             rigidbody = GetComponent<Rigidbody2D>();
-            collider = GetComponent<Collider2D>();
+            spriteRenderer = transform.Find("sprite").GetComponent<SpriteRenderer>();
         }
 
 
         protected virtual void OnTriggerEnter2D(Collider2D collision)
         {
+            Debug.Log("hit" + collision.name);
             //判断是不是在应该撞的layer
             if (!isDead && ((1 << collision.gameObject.layer) & layermaskToHit) > 0)
             {
-                Debug.Log(collision.name);
                 Vector3 velocity = rigidbody.velocity.normalized;
                 Vector3 hitEffectPosition = transform.position + velocity * 0.1f;
                 OnHit(collision.gameObject, hitEffectPosition, -velocity);
@@ -77,7 +82,7 @@ namespace GameLogic.Item.Weapon
         /// <summary>
         /// 子弹销毁时调用
         /// </summary>
-        protected void OnDead()
+        protected void DestroyProjectile()
         {
             ProjectilePool.instance.RecycleProjectile(poolName, this); //回收
         }

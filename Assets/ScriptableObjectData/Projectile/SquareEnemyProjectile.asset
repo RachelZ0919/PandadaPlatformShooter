@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d31df5aca1cd2994ca22158a605c2e5a, type: 3}
+  m_Name: SquareEnemyProjectile
+  m_EditorClassIdentifier: 
+  projectilePrefab: {fileID: 1266266772781108208, guid: e3e19bc05311b4d4c9cb88025a664dcd,
+    type: 3}
+  projectileImage: {fileID: 21300000, guid: 5016a242704b6144d95e8df311a9c75f, type: 3}
+  damageType: 1
+  type: 1
+  colliderType: 1
+  size: 0.7

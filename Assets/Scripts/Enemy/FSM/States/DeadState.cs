@@ -17,8 +17,6 @@ namespace AI.FSM
         public override void EnterState(FSMBase fsm)
         {
             base.EnterState(fsm);
-            Debug.Log("死亡");
-            fsm.gameObject.SetActive(false);
         }
 
 

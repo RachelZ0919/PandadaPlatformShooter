@@ -15,11 +15,28 @@ namespace GameLogic.Managers
     {
         [SerializeField] private StatData statData;
         [SerializeField] private AudioManager usingAudio;
-
+        
+        private Animator animator;
+        ShootingBehavior shootingBehavior;
+        MovingBehavior movingBehavior;
+        HitBehavior hitBehavior;
+        Collider2D collider;
+        Rigidbody2D rigidbody;
 
         public delegate void OnDeath(GameObject obj);
 
         public OnDeath OnObjectDeath;
+        private bool hasDead;
+
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+            shootingBehavior = GetComponent<ShootingBehavior>();
+            movingBehavior = GetComponent<MovingBehavior>();
+            hitBehavior = GetComponent<HitBehavior>();
+            collider = GetComponent<Collider2D>();
+            rigidbody = GetComponent<Rigidbody2D>();
+        }
 
         private void Start()
         {
@@ -27,16 +44,17 @@ namespace GameLogic.Managers
             Stats stat = GetComponent<Stats>();
             stat.InitializeStats(statData);
             stat.OnStatsChanged += OnStatChange;
-            ShootingBehavior shootingBehavior = GetComponent<ShootingBehavior>();
-            MovingBehavior movingBehavior = GetComponent<MovingBehavior>();
-            HitBehavior hitBehavior = GetComponent<HitBehavior>();
+
+            hasDead = false;
 
             //初始化枪
             if(shootingBehavior != null)
             {
-                Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
-                weapon.PickUp(transform);
-                shootingBehavior.audio = usingAudio;
+                if(statData.defaultWeapon != null)
+                {
+                    Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
+                    weapon.PickUp(transform);
+                }
             }
 
             if(movingBehavior != null)
@@ -49,16 +67,34 @@ namespace GameLogic.Managers
                 hitBehavior.audio = usingAudio;
             }
 
-            //GameManager.instance.OnObjectCreate(this);
+            GameManager.instance.OnObjectCreate(this);
         }
 
         private void OnStatChange(Stats stat)
         {
-            if (stat.health <= 0)
+            if (!hasDead && stat.health <= 0)
             {
-                //todo:角色死亡
+                Debug.Log(name + " is Dead");
+                hasDead = true;
+
+                //关闭所有behavior和碰撞体
+                if (shootingBehavior != null) shootingBehavior.enabled = false;
+                if (movingBehavior != null) movingBehavior.enabled = false;
+                if (hitBehavior != null) hitBehavior.enabled = false;
+                if (collider != null) collider.enabled = false;
+                rigidbody.simulated = false;
+
+                //开始死亡动画
+                animator.SetBool("isDead", true);
+                
+                //通知物体死亡
                 OnObjectDeath(gameObject);
             }
+        }
+
+        public void OnDeadAnimationEnd()
+        {
+            gameObject.SetActive(false);
         }
     }
 }

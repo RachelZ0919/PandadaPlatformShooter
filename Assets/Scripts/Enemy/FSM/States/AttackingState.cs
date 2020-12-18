@@ -20,7 +20,6 @@ namespace AI.FSM
         public override void EnterState(FSMBase fsm)
         {
             base.EnterState(fsm);
-            //Debug.Log("开始攻击");
         }
 
         public override void ActionState(FSMBase fsm)

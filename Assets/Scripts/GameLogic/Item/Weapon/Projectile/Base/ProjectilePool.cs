@@ -112,7 +112,7 @@ namespace GameLogic.Item.Weapon
                     {
                         Projectile proj = projectile.GenerateProjectile();
                         proj.poolName = user;
-                        proj.gameObject.name = user + "_projectile";
+                        proj.gameObject.name = user + "_projectile" + $"_{i}";
                         if (!destroyOnLoad)  DontDestroyOnLoad(proj.gameObject);
                         proj.gameObject.SetActive(false);
                         projectilePool.Enqueue(proj);
@@ -128,7 +128,7 @@ namespace GameLogic.Item.Weapon
                 for (int i = 0; i < size; i++)
                 {
                     Projectile proj = projectile.GenerateProjectile();
-                    proj.gameObject.name = user + "_projectile";
+                    proj.gameObject.name = user + "_projectile" + $"_{i}";
                     proj.poolName = user;
                     if (!destroyOnLoad) DontDestroyOnLoad(proj.gameObject);
                     proj.gameObject.SetActive(false);
@@ -172,10 +172,11 @@ namespace GameLogic.Item.Weapon
             }
 
             //获取并初始化子弹
+
             Projectile projectile = poolDictionary[user].pool.Dequeue();
+
             projectile.gameObject.SetActive(true);
             projectile.Initialize();
-
             return projectile;
 
         }
@@ -193,10 +194,13 @@ namespace GameLogic.Item.Weapon
                 Debug.LogWarning("There is no projectile pool belongs to" + user);
                 return;
             }
-            
+
             //回收并deactivate
-            poolDictionary[user].pool.Enqueue(projectile);
-            projectile.gameObject.SetActive(false);
+            if (projectile.gameObject.activeSelf)
+            {
+                poolDictionary[user].pool.Enqueue(projectile);
+                projectile.gameObject.SetActive(false);
+            }
         }
 
         /// <summary>

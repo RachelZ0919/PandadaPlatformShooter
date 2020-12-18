@@ -52,7 +52,7 @@ namespace AI.FSM
 
         private void PingPongPatrolling(FSMBase fsm)
         {
-            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 0.5)
+            if (fsm.wayPoints[index].GetComponent<Collider2D>().OverlapPoint(fsm.transform.position))
             {
                 if (index == fsm.wayPoints.Length - 1)
                 {
@@ -66,7 +66,7 @@ namespace AI.FSM
 
         private void OncePatrolling(FSMBase fsm)
         {
-            if (Vector3.Distance(fsm.transform.position, fsm.wayPoints[index].position) <= 0.5f)
+            if (fsm.wayPoints[index].GetComponent<Collider2D>().OverlapPoint(fsm.transform.position))
             {
                 if (index == fsm.wayPoints.Length - 1)
                 {
