@@ -60,6 +60,7 @@ namespace GameLogic.EntityBehavior
         public bool enableAudio = false;
         [HideInInspector] public AudioManager audio;
 
+
         #endregion
 
         private void Awake()
@@ -91,6 +92,7 @@ namespace GameLogic.EntityBehavior
         {
             Initialize();
         }
+
 
         /// <summary>
         /// 行为初始化
@@ -262,7 +264,6 @@ namespace GameLogic.EntityBehavior
                 Vector2 normal = collision.contacts[0].normal;
                 if(Vector2.Angle(normal, Vector2.up) < 1f)
                 {
-                    Debug.LogError("HitTheGround");
                     isOnGround = true;
                     leavingGroundJumpingFrame = 0;
                 }
@@ -286,5 +287,7 @@ namespace GameLogic.EntityBehavior
             fallingJumpingFrame = 0;
             leavingGroundJumpingFrame = 0;
         }
+
+
     }
 }

@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using System;
 using System.Collections.Generic;
 
 namespace GameLogic.EntityStats
@@ -219,7 +219,8 @@ namespace GameLogic.EntityStats
         /// </summary>
         public void ClearProperty()
         {
-            stats.Clear();
+            if(stats != null)   stats.Clear();
+            else stats = new Dictionary<string, float>();
         }
 
         /// <summary>
@@ -235,11 +236,6 @@ namespace GameLogic.EntityStats
             AddProperty("projectileSpeed", statData.projectileSpeed);
             AddProperty("speed", statData.speed);
             AddProperty("range", statData.range);
-        }
-
-        private void OnDisable()
-        {
-            ClearProperty();
         }
 
     }

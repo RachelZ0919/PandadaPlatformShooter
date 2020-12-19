@@ -106,17 +106,17 @@ namespace GameLogic.Item.Weapon
                 }
                 else
                 {
-                    //扩充原有的对象池
-                    //int addCount = size - projectilePool.Count;
-                    for (int i = 0; i < size; i++)
-                    {
-                        Projectile proj = projectile.GenerateProjectile();
-                        proj.poolName = user;
-                        proj.gameObject.name = user + "_projectile" + $"_{i}";
-                        if (!destroyOnLoad)  DontDestroyOnLoad(proj.gameObject);
-                        proj.gameObject.SetActive(false);
-                        projectilePool.Enqueue(proj);
-                    }
+                    ////扩充原有的对象池
+                    ////int addCount = size - projectilePool.Count;
+                    //for (int i = 0; i < size; i++)
+                    //{
+                    //    Projectile proj = projectile.GenerateProjectile();
+                    //    proj.poolName = user;
+                    //    proj.gameObject.name = user + "_projectile" + $"_{i}";
+                    //    if (!destroyOnLoad)  DontDestroyOnLoad(proj.gameObject);
+                    //    proj.gameObject.SetActive(false);
+                    //    projectilePool.Enqueue(proj);
+                    //}
                 }
             }
             else

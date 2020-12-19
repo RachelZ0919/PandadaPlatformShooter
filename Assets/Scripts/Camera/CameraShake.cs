@@ -16,6 +16,14 @@ namespace CameraLogic
         private float shakeRotation; //抖屏旋转强度
         private Vector3 originPosigion; //原位置
 
+        public bool isShaking
+        {
+            get
+            {
+                return shakeTimeRemaining > 0;
+            }
+        }
+
         /// <summary>
         /// 是否要旋转
         /// </summary>

@@ -6,10 +6,12 @@ namespace LevelEvents
 {
     public class AnimationTool : MonoBehaviour
     {
-        //public void UseScreenShake()
-        //{
-        //    CameraShake.instance.ShakeScreen(0.3f, 0.1f);
-        //}
+        private Animator animator;
+
+        private void Awake()
+        {
+            animator = GetComponent<Animator>();
+        }
 
         public void UseScreenShake(AnimationEvent animationEvent)
         {
@@ -35,6 +37,20 @@ namespace LevelEvents
         public void SetControl(AnimationEvent animationEvent)
         {
             GameManager.instance.AllowControl(animationEvent.intParameter > 0);
+        }
+
+        public void ShowText(AnimationEvent animationEvent)
+        {
+            animator.SetBool("isTextCompleted", false);
+            MiddleText text = GameObject.Find(animationEvent.stringParameter).GetComponent<MiddleText>();
+            text.OnTextEnd += OnTextEnd;
+            text.StartShowingText();
+        }
+
+        private void OnTextEnd(MiddleText text)
+        {
+            text.OnTextEnd -= OnTextEnd;
+            animator.SetBool("isTextCompleted", true);
         }
     }
 }

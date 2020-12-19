@@ -13,12 +13,20 @@ public class MiddleText : MonoBehaviour
     /// </summary>
     public float letterPause = 0.1f;
     /// <summary>
+    /// 每行的间隔
+    /// </summary>
+    public float linePause = 1.5f;
+    /// <summary>
     /// 要显示的字
     /// </summary>
     public string[] lines;
 
+    public delegate void TextEnd(MiddleText text);
+    public TextEnd OnTextEnd;
 
     private float lastTime = 0;
+    private float endLineTime;
+    private bool lineEnd = false;
     private string totalWords;
     private int currentLineIndex;
     private int currentWordIndex;
@@ -39,11 +47,8 @@ public class MiddleText : MonoBehaviour
         hasStartShowingText = false;
 
         bubbleSize = bubble.sizeDelta;
-        Debug.Log(bubbleSize);
         
         bubble.gameObject.SetActive(false);
-
-
     }
 
     // 开启消息框
@@ -68,36 +73,58 @@ public class MiddleText : MonoBehaviour
     {
         if (hasStartShowingText)
         {
-            if (Time.time - lastTime > letterPause)
+            if (lineEnd)
             {
-                if(totalWords.Length > currentWordIndex)
+                if(Time.time - endLineTime > linePause)
                 {
-                    text.text += totalWords[currentWordIndex++];
-                    if(currentWordIndex / 22 < 0)
+                    if(lines.Length <= currentLineIndex)
                     {
-                        bubble.sizeDelta = new Vector2(bubbleSize.x + (currentWordIndex - 1) * 33, bubbleSize.y);
+                        hasStartShowingText = false;
+                        bubble.gameObject.SetActive(false);
+                        OnTextEnd(this);
+
                     }
-                    
-                    lastTime = Time.time;
-                }
-                else
-                {
-                    if(lines.Length > currentLineIndex)
+                    else
                     {
                         currentWordIndex = 0;
                         totalWords = lines[currentLineIndex++];
                         text.text = "";
+                        text.text += totalWords[currentWordIndex++];
+                        ResetBubble();
+                        lineEnd = false;
+                    }
+
+
+                }
+            }
+            else
+            {
+                if (Time.time - lastTime > letterPause)
+                {
+                    if (totalWords.Length > currentWordIndex)
+                    {
+                        text.text += totalWords[currentWordIndex++];
+
+                        if (currentWordIndex / 22 < 1)
+                        {
+                            bubble.sizeDelta = new Vector2(bubbleSize.x + (currentWordIndex - 1) * 35f, bubbleSize.y);
+                        }
+                        else
+                        {
+                            bubble.sizeDelta = new Vector2(bubbleSize.x + 21 * 35f, bubbleSize.y + (currentWordIndex / 22) * 31.5f);
+                        }
+
+                        lastTime = Time.time;
                     }
                     else
                     {
-                        hasStartShowingText = false;
-                        //todo: tell other finished
+                        Debug.Log(currentLineIndex);
+                        lineEnd = true;
+                        endLineTime = Time.time;
                     }
 
                 }
-
             }
         }
     }
-
 }

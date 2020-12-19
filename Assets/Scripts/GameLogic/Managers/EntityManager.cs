@@ -21,6 +21,7 @@ namespace GameLogic.Managers
         HitBehavior hitBehavior;
         Collider2D collider;
         Rigidbody2D rigidbody;
+        Stats stat;
 
         public delegate void OnDeath(EntityManager entity);
 
@@ -36,6 +37,7 @@ namespace GameLogic.Managers
             hitBehavior = GetComponent<HitBehavior>();
             collider = GetComponent<Collider2D>();
             rigidbody = GetComponent<Rigidbody2D>();
+            stat = GetComponent<Stats>();
 
             //音效初始化
             if (shootingBehavior != null)
@@ -54,9 +56,8 @@ namespace GameLogic.Managers
             }
         }
 
-        private void OnEnable()
+        private void Start()
         {
-            //玩家初始化
             Initialize();
         }
 
@@ -64,7 +65,6 @@ namespace GameLogic.Managers
         public void Initialize()
         {
             //初始化角色属性
-            Stats stat = GetComponent<Stats>();
             stat.InitializeStats(statData);
             stat.OnStatsChanged += OnStatChange;
 
@@ -94,24 +94,14 @@ namespace GameLogic.Managers
         {
             if (!hasDead && stat.health <= 0)
             {
-                Debug.Log(name + " is Dead");
                 hasDead = true;
 
                 //删除死亡检测回调
                 stat.OnStatsChanged -= OnStatChange;
 
-                //关闭所有behavior和碰撞体
-                if (shootingBehavior != null) shootingBehavior.enabled = false;
-                if (movingBehavior != null) movingBehavior.enabled = false;
-                if (hitBehavior != null) hitBehavior.enabled = false;
-                if (collider != null) collider.enabled = false;
-                rigidbody.simulated = false;
-
                 //开始死亡动画
                 animator.SetBool("isDead", true);
-                
-                //通知物体死亡
-                OnObjectDeath(this);
+               
             }
         }
 
@@ -120,7 +110,10 @@ namespace GameLogic.Managers
         /// </summary>
         public void OnDeadAnimationEnd()
         {
+            //通知物体死亡
+            OnObjectDeath(this);
             gameObject.SetActive(false);
         }
+
     }
 }

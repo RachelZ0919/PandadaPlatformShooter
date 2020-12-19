@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8d5f5ea31403cf64bab8840ec3c64f3c, type: 3}
-  m_Name: SquareEnemy
+  m_Name: GlitchedPlayerWithGun
   m_EditorClassIdentifier: 
-  health: 3
+  health: 10
   attack: 0
   shootingSpeed: 0
   projectileSpeed: 0
-  speed: 4
+  speed: 8
   range: 0
   knockbackResist: 0
-  defaultWeapon: {fileID: 0}
+  defaultWeapon: {fileID: 4653096456072817878, guid: 531ee037f7036a746ba1b330e987d653,
+    type: 3}

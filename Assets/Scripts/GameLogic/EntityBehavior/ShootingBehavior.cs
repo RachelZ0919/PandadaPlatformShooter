@@ -76,12 +76,6 @@ namespace GameLogic.EntityBehavior
             reverseScale = new Vector3(-originScale.x, originScale.y, originScale.z);
         }
 
-        private void OnDisable()
-        {
-            //重设武器
-            weapon = null;
-        }
-
         /// <summary>
         /// 让枪朝指定方向射出子弹
         /// </summary>

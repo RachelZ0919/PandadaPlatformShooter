@@ -26,7 +26,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6844655677666066393
 Transform:
   m_ObjectHideFlags: 0
@@ -151,14 +151,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85f7ab3a54cb8a74eab636a6423ba184, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lastNotZeroDirection: 0
   startAcc: 400
   stopAcc: 800
   turnAcc: 800
   jumpForce: 40
   jumpingBufferFrame: 3
+  movingVisualTransform: {fileID: 0}
   enableAudio: 0
   audio: {fileID: 0}
-  movingVisualTransform: {fileID: 0}
 --- !u!114 &6844655677666066407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -253,6 +254,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   indivisibleDuration: 0
   canGetKnockbacked: 1
+  enableScreenShake: 0
   audio: {fileID: 0}
 --- !u!114 &6844655677666066394
 MonoBehaviour:
@@ -282,6 +284,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damageType: 1
   damageAmount: 1
+  hitDuration: 1
+  hasKnockBack: 1
 --- !u!1 &6844655678237936179
 GameObject:
   m_ObjectHideFlags: 0

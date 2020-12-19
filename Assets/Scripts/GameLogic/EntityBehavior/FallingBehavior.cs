@@ -33,7 +33,7 @@ public class FallingBehavior : MonoBehaviour
         material = new PhysicsMaterial2D();
     }
 
-    private void OnEnable()
+    private void Start()
     {
         Initialize();
     }

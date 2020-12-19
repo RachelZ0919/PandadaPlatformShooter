@@ -143,7 +143,7 @@ namespace GameLogic.Item.Weapon
         {
             //计算对象池大小
             //todo:同时要考虑基础属性
-            float length = Mathf.Min(10, weaponData.range) * 5; //前者是场景大小获得的经验值，场景比例改变，就要修改这个。
+            float length = Mathf.Min(10, weaponData.range); //前者是场景大小获得的经验值，场景比例改变，就要修改这个。
             float projectileLife = length / weaponData.projectileSpeed; //子弹从发射到消亡的平均时间
             float totalClips = projectileLife / (weaponData.projectilesPerClip /
                                       weaponData.shootingSpeed + weaponData.cooldownTime); //从发射到消亡能发射的子弹数量（以弹夹为单位） = 平均时间 / （一弹夹子弹量 * 子弹发射时间间隔 + 换弹时间）

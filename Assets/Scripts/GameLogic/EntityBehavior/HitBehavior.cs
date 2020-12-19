@@ -10,15 +10,23 @@ namespace GameLogic.EntityBehavior
         /// <summary>
         /// 击中后无敌状态时间
         /// </summary>
-        public float indivisibleDuration = 0.5f;
+        [SerializeField] private float indivisibleDuration = 0.5f;
         /// <summary>
         /// 是否受击退效果
         /// </summary>
-        public bool canGetKnockbacked = false;
+        [SerializeField] private bool canGetKnockbacked = false;
         /// <summary>
         /// 击中后是否开启震屏
         /// </summary>
-        public bool enableScreenShake = false;
+        [SerializeField] private bool enableScreenShake = false;
+
+        public bool isIndivisible
+        {
+            get
+            {
+                return Time.time - hitStartTime < indivisibleDuration;
+            }
+        }
 
         private Stats stat;
         private float hitStartTime;
@@ -40,9 +48,10 @@ namespace GameLogic.EntityBehavior
             animator = GetComponent<Animator>();
         }
 
-        private void OnEnable()
+        private void Start()
         {
             hitStartTime = Time.time - indivisibleDuration;
+            recoverOffset = currentOffset = lastOffset = Vector3.zero;
         }
 
         private void Update()
