@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using GameLogic.EntityStats;
 using GameLogic.Managers;
+using CameraLogic;
 
 namespace GameLogic.EntityBehavior
 {
@@ -14,6 +15,10 @@ namespace GameLogic.EntityBehavior
         /// 是否受击退效果
         /// </summary>
         public bool canGetKnockbacked = false;
+        /// <summary>
+        /// 击中后是否开启震屏
+        /// </summary>
+        public bool enableScreenShake = false;
 
         private Stats stat;
         private float hitStartTime;
@@ -35,8 +40,9 @@ namespace GameLogic.EntityBehavior
             animator = GetComponent<Animator>();
         }
 
-        private void Start()
+        private void OnEnable()
         {
+            hitStartTime = Time.time - indivisibleDuration;
         }
 
         private void Update()
@@ -47,12 +53,19 @@ namespace GameLogic.EntityBehavior
                 transform.position += currentOffset - lastOffset;
                 lastOffset = currentOffset;
             }
+
+            animator.SetFloat("indivisibleTime", indivisibleDuration - Time.time + hitStartTime);
         }
 
         //todo:异常状态
+        /// <summary>
+        /// 实体受到伤害
+        /// </summary>
+        /// <param name="damage">伤害量</param>
+        /// <param name="knockbackForce">击退强度</param>
+        /// <param name="direction">击退方向</param>
         public void GetHit(float damage, float knockbackForce, Vector2 direction) 
         {
-            Debug.Log(name + " get hit");
             if (Time.time - hitStartTime >= indivisibleDuration)
             {
                 stat.SetValue("health", stat.health - damage);
@@ -60,9 +73,10 @@ namespace GameLogic.EntityBehavior
                 //击退
                 if (canGetKnockbacked)
                 {
-                    float knockBack = (Mathf.Max(0, knockbackForce - stat.knockBackResist) + 0.5f) * 0.5f;
-                    recoverOffset = direction.normalized * knockBack;
-                    transform.position -= recoverOffset * 1.5f;
+                    float knockBack = (Mathf.Max(0, knockbackForce - stat.knockBackResist) + 0.2f) * 0.1f;
+                    recoverOffset = direction.normalized * Mathf.Min(knockBack, 0.5f);
+                    Vector3 positionOffset = direction.normalized * knockBack * 1.5f;
+                    transform.position -= positionOffset;
                     lastOffset = currentOffset = Vector3.zero;
                 }
 
@@ -74,12 +88,21 @@ namespace GameLogic.EntityBehavior
 
                 //音效
                 if(audio != null) audio.PlayAudio("hitAudio");
+
+                if (enableScreenShake)
+                {
+                    CameraShake.instance.ShakeScreen(0.3f, 0.02f);
+                }
             }
         }
 
         private void LateUpdate()
         {
             animator.SetBool("isHit", false);
+            if (Vector3.Distance(recoverOffset, currentOffset) > 0.01f)
+            {
+                rigidbody.velocity *= 0.2f;
+            }
         }
 
     }

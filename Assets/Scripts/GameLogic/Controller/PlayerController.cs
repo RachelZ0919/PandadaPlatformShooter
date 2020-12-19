@@ -31,32 +31,38 @@ namespace GameLogic.Controller
 
         private void Update()
         {
-            movingBehavior.MoveInDirection(movingJoystick.Direction.x);
+            if (movingJoystick.enabled)
+            {
+                movingBehavior.MoveInDirection(movingJoystick.Direction.x);
 
-            if (Input.GetKey(KeyCode.A))
-            {
-                movingBehavior.MoveInDirection(-1);
-            }
-            else if (Input.GetKey(KeyCode.D))
-            {
-                movingBehavior.MoveInDirection(1);
-            }
+                if (Input.GetKey(KeyCode.A))
+                {
+                    movingBehavior.MoveInDirection(-1);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    movingBehavior.MoveInDirection(1);
+                }
 
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                movingBehavior.Jump();
-            }
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    movingBehavior.Jump();
+                }
 
-            Vector2 shootingDirection = shootingJoystick.Direction;
-            if(shootingDirection.magnitude > 0.5f)
-            {
-                shootingBehavior.Shoot(shootingDirection);
             }
 
-            if (movingJoystick.Direction.y > 0.7f) 
+            if (shootingJoystick.enabled)
             {
-                Debug.Log("jump");
-                movingBehavior.Jump();
+                Vector2 shootingDirection = shootingJoystick.Direction;
+                if (shootingDirection.magnitude > 0.5f)
+                {
+                    shootingBehavior.Shoot(shootingDirection);
+                }
+
+                if (movingJoystick.Direction.y > 0.55f && movingJoystick.Direction.magnitude > 0.5f)
+                {
+                    movingBehavior.Jump();
+                }
             }
         }
     }

@@ -17,7 +17,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("health"))
+                if (stats != null && stats.ContainsKey("health"))
                 {
                     return stats["health"];
                 }
@@ -34,7 +34,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("attack"))
+                if (stats != null && stats.ContainsKey("attack"))
                 {
                     return stats["attack"];
                 }
@@ -52,7 +52,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("shootingSpeed"))
+                if (stats != null && stats.ContainsKey("shootingSpeed"))
                 {
                     return stats["shootingSpeed"];
                 }
@@ -69,7 +69,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("projectileSpeed"))
+                if (stats != null && stats.ContainsKey("projectileSpeed"))
                 {
                     return stats["projectileSpeed"];
                 }
@@ -86,7 +86,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("speed"))
+                if (stats != null && stats.ContainsKey("speed"))
                 {
                     return stats["speed"];
                 }
@@ -103,7 +103,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("range"))
+                if (stats != null && stats.ContainsKey("range"))
                 {
                     return stats["range"];
                 }
@@ -120,7 +120,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("maxHealth"))
+                if (stats != null && stats.ContainsKey("maxHealth"))
                 {
                     return stats["maxHealth"];
                 }
@@ -137,7 +137,7 @@ namespace GameLogic.EntityStats
         {
             get
             {
-                if (stats.ContainsKey("knockbackResist"))
+                if (stats != null && stats.ContainsKey("knockbackResist"))
                 {
                     return stats["knockbackResist"];
                 }
@@ -215,10 +215,19 @@ namespace GameLogic.EntityStats
         }
 
         /// <summary>
+        /// 清空属性
+        /// </summary>
+        public void ClearProperty()
+        {
+            stats.Clear();
+        }
+
+        /// <summary>
         /// 初始化所有属性
         /// </summary>
         public void InitializeStats(StatData statData)
         {
+            ClearProperty();
             AddProperty("health", statData.health);
             AddProperty("maxHealth", statData.health);
             AddProperty("attack", statData.attack);
@@ -226,6 +235,11 @@ namespace GameLogic.EntityStats
             AddProperty("projectileSpeed", statData.projectileSpeed);
             AddProperty("speed", statData.speed);
             AddProperty("range", statData.range);
+        }
+
+        private void OnDisable()
+        {
+            ClearProperty();
         }
 
     }

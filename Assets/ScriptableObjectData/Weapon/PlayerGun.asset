@@ -16,11 +16,11 @@ MonoBehaviour:
   projectilesPerClip: 100
   cooldownTime: 0
   attack: 1
-  projectileSpeed: 40
+  projectileSpeed: 20
   shootingSpeed: 5
   range: 40
   lastTime: 0
-  recoilForce: 1
+  recoilForce: 0.5
   knockbackForce: 1
   projectile: {fileID: 11400000, guid: b17625ca88db98e46b07facda437201d, type: 2}
   shootingAudio: {fileID: 8300000, guid: 696af79f267cfc24e8052157086eec53, type: 3}

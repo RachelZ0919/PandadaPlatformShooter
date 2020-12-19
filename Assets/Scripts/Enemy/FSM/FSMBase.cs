@@ -72,11 +72,11 @@ namespace AI.FSM
         private void Awake()
         {
             InitComponent();
+            ConfigFSM();
         }
 
-        private void Start()
+        private void OnEnable()
         {
-            ConfigFSM();
             InitDefaultDtate();
         }
 

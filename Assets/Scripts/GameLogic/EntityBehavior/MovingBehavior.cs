@@ -7,45 +7,95 @@ namespace GameLogic.EntityBehavior
     [RequireComponent(typeof(Rigidbody2D))]
     public class MovingBehavior : MonoBehaviour
     {
+        #region Basic
+        
         private Rigidbody2D rigidbody; //人物rigidbody2D组件
-        private Animator animator; // 人物animator
+
+        private Vector3 hitBoxOffset; //碰撞盒位置
+        private float width; //角色宽度
+        private float height; //角色高度
+
+        //判断当前状态用
+        private bool isAccelerating;
+        private bool isTurning;
+        private bool turningEnd;
+        private bool isStopping;
+        private bool isOnGround;
+
+        #endregion
+
+        #region Walk
+
+        public float lastNotZeroDirection;
+
         private float direction; // 人物移动方向
         private float lastDirection; //上一帧人物移动方向
         private float maxVel; //最大速度
-
-        private float width; //角色宽度
-        private float height; //角色高度
 
         [SerializeField] private float startAcc = 50; //起跑加速度
         [SerializeField] private float stopAcc = 80; //停止加速度
         [SerializeField] private float turnAcc = 90; //转向加速度
 
-        [SerializeField] private float jumpForce = 25; //跳跃高度
-        [SerializeField] private int jumpingBufferFrame = 3; //跳跃缓冲帧
+        #endregion
 
-        private bool isAccelerating;
-        private bool isTurning;
-        private bool turningEnd;
-        private bool isStopping;
+        #region Jump
 
-        private bool isOnGround;
         private int leavingGroundJumpingFrame; //离地后的跳跃缓冲
         private int fallingJumpingFrame; //落地前的跳跃缓冲
 
+        [SerializeField] private float jumpForce = 25; //跳跃高度
+        [SerializeField] private int jumpingBufferFrame = 3; //跳跃缓冲帧
+
+        #endregion
+
+        #region Visual and Audio
+
+        //动画
+        private Animator animator; // 人物animator
+        [SerializeField] private Transform movingVisualTransform;
+        private Vector3 originScale;
+        private Vector3 reverseScale;
+
+        //音效
         public bool enableAudio = false;
         [HideInInspector] public AudioManager audio;
 
+        #endregion
+
         private void Awake()
         {
+            //加载组件
             rigidbody = GetComponent<Rigidbody2D>();
             animator = GetComponent<Animator>();
-            Vector3 size = GetComponent<SpriteRenderer>().sprite.bounds.size;
+
+            //记录碰撞体参数
+            Vector3 size = GetComponent<Collider2D>().bounds.size;
+            height = size.y;
+            width = size.x;
+            hitBoxOffset = GetComponent<Collider2D>().offset;
+
+            //设置状态回调
             GetComponent<EntityStats.Stats>().OnStatsChanged += GetSpeed;
-            height = size.x;
-            width = size.y;
+            
+            //设置视觉用参数
+            if (movingVisualTransform != null)
+            {
+                originScale = movingVisualTransform.localScale;
+                originScale.x = Mathf.Abs(originScale.x);
+                reverseScale = originScale;
+                reverseScale.x *= -1;
+            }
         }
 
         private void Start()
+        {
+            Initialize();
+        }
+
+        /// <summary>
+        /// 行为初始化
+        /// </summary>
+        public void Initialize()
         {
             direction = 0;
             isAccelerating = false;
@@ -55,6 +105,8 @@ namespace GameLogic.EntityBehavior
             isOnGround = false;
             leavingGroundJumpingFrame = 0;
             fallingJumpingFrame = 0;
+
+            rigidbody.velocity = Vector2.zero;
         }
 
         public void FixedUpdate()
@@ -93,10 +145,25 @@ namespace GameLogic.EntityBehavior
                 
             }
 
+            //修改人方向
+            if(movingVisualTransform != null)
+            {
+                if (xSpeed > 0)
+                {
+                    movingVisualTransform.localScale = originScale;
+                }
+                else if (xSpeed < 0)
+                {
+                    movingVisualTransform.localScale = reverseScale;
+                }
+            }
+
             animator.SetFloat("xspeed", Mathf.Abs(xSpeed));
             animator.SetFloat("yspeed", ySpeed);
             animator.SetBool("isOnGround", isOnGround);
             rigidbody.velocity = new Vector2(xSpeed, ySpeed);
+
+            
         }
 
         private void Update()
@@ -104,7 +171,8 @@ namespace GameLogic.EntityBehavior
             if (isOnGround)//检测是否在地面
             {
                 int layerMask = 1<<8 | 1<<9 | 1<<10;
-                Vector3 positionOffset = new Vector3(width / 2, 0, 0);
+                layerMask &= ~(1 << gameObject.layer);
+                Vector3 positionOffset = new Vector3(width / 2, 0, 0) + hitBoxOffset;
                 bool hitNothing = true;
 
                 //左右中各测一次是否接触地面，如果均没有接触，就说明没有在地面上。
@@ -128,7 +196,6 @@ namespace GameLogic.EntityBehavior
             }
         }
 
-
         private void LateUpdate()
         {
             //判断下一帧状态
@@ -151,6 +218,10 @@ namespace GameLogic.EntityBehavior
             }
             
             //更新方向
+            if(Mathf.Abs(direction) > 0.3f)
+            {
+                lastNotZeroDirection = direction / Mathf.Abs(direction);
+            }
             lastDirection = direction;
             direction = 0;
 
@@ -186,11 +257,12 @@ namespace GameLogic.EntityBehavior
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.CompareTag("ground"))
+            if (((1 << collision.gameObject.layer) & (1 << 8 | 1 << 10)) > 0) 
             {
                 Vector2 normal = collision.contacts[0].normal;
                 if(Vector2.Angle(normal, Vector2.up) < 1f)
                 {
+                    Debug.LogError("HitTheGround");
                     isOnGround = true;
                     leavingGroundJumpingFrame = 0;
                 }
@@ -209,7 +281,7 @@ namespace GameLogic.EntityBehavior
         private void ExecuteJump()
         {
             rigidbody.velocity = new Vector2(rigidbody.velocity.x, jumpForce);
-            audio.PlayAudio("jumpAudio");
+            if(enableAudio && audio != null) audio.PlayAudio("jumpAudio");
             isOnGround = false;
             fallingJumpingFrame = 0;
             leavingGroundJumpingFrame = 0;

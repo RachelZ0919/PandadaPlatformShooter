@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GameLogic.EntityBehavior;
-using CameraLogic;
+using VisualEffect;
 
 namespace GameLogic.Item.Weapon
 {
@@ -18,6 +18,8 @@ namespace GameLogic.Item.Weapon
 
                 //后坐力
                 ApplyRecoilForce();
+
+                if (effectName != null) EffectPool.instance.PlayEffect(effectName, shootingPoint.position, direction);
 
                 lastShootingTime = Time.time;
                 projectileLeft--;

@@ -62,6 +62,35 @@ namespace VisualEffect
             }
         }
 
+
+        /// <summary>
+        /// 添加特效
+        /// </summary>
+        /// <param name="effectName">特效名</param>
+        /// <param name="size">池子大小</param>
+        /// <param name="effect">特效</param>
+        public void AddEffect(string effectName, int size, GameObject effect)
+        {
+            if (poolDictionary.ContainsKey(effectName))
+            {
+                Debug.LogWarning("The pool" + effectName + "already exists.");
+                return;
+            }
+
+            Queue<GameObject> pool = new Queue<GameObject>();
+            for (int j = 0; j < size; j++)
+            {
+                GameObject obj = Instantiate(effect);
+
+                obj.GetComponent<EffectManager>().poolName = effectName;
+                obj.SetActive(false);
+                DontDestroyOnLoad(obj);
+                pool.Enqueue(obj);
+            }
+            poolDictionary.Add(effectName, pool);
+        }
+
+
         /// <summary>
         /// 在指定位置播放指定特效
         /// </summary>

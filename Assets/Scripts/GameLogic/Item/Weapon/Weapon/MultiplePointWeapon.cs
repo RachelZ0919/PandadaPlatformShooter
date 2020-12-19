@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using GameLogic.EntityBehavior;
+using VisualEffect;
 
 namespace GameLogic.Item.Weapon
 {
@@ -24,6 +25,8 @@ namespace GameLogic.Item.Weapon
                     Vector2 shootdir = shootingPoints[i].localRotation * direction;
 
                     projectile.Launch(shootingPoints[i].position, shootdir);
+
+                    if (effectName != null) EffectPool.instance.PlayEffect(effectName, shootingPoints[i].position, shootdir);
                 }
 
                 //后坐力

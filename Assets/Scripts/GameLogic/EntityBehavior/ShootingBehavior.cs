@@ -37,26 +37,49 @@ namespace GameLogic.EntityBehavior
         /// 实体当前持有的枪
         /// </summary>
         [HideInInspector] public Weapon weapon;
-        [HideInInspector] public AudioManager audio;
+        private ShootingBaseStats baseStats; //基础属性
+
+        #region Visual 
+
         public Transform holdingPoint;
+        [SerializeField] private Transform shootingVisualTransform;
+
         public bool enableScreenShake = false;
         public float screenShakeIntensity = 0.05f;
         public float screenShakeTime = 0.1f;
-        public bool enableAudio = true;
-        private ShootingBaseStats baseStats; //基础属性
+
         private Vector3 originScale;
         private Vector3 reverseScale;
 
+        #endregion
+
+        #region Audio
+
+        [HideInInspector] public AudioManager audio;
+        public bool enableAudio = true;
+
+        #endregion
+
+
+
         private void Awake()
         {
+            //设置回调
             GetComponent<Stats>().OnStatsChanged += FetchEntityStats;
+
+            //基础属性
             baseStats = new ShootingBaseStats();
+
+            //视觉
+            originScale = shootingVisualTransform.localScale;
+            originScale.x = Mathf.Abs(originScale.x);
+            reverseScale = new Vector3(-originScale.x, originScale.y, originScale.z);
         }
 
-        private void Start()
+        private void OnDisable()
         {
-            originScale = transform.localScale;
-            reverseScale = new Vector3(-originScale.x, originScale.y, originScale.z);
+            //重设武器
+            weapon = null;
         }
 
         /// <summary>
@@ -66,18 +89,21 @@ namespace GameLogic.EntityBehavior
         /// <returns>是否发射成功</returns>
         public bool Shoot(Vector2 direction)
         {
-            float oriAngle = transform.eulerAngles.z;
-            Debug.Log(oriAngle);
+            if(weapon == null)
+            {
+                return false;
+            }
+
             float angle = Vector2.SignedAngle(Vector2.right, direction);
             if (Mathf.Abs(angle) > 90) 
             {
-                transform.localScale = reverseScale;
+                shootingVisualTransform.localScale = reverseScale;
                 holdingPoint.rotation = Quaternion.Euler(0, 0, angle - 180);
                 
             }
             else
             {
-                transform.localScale = originScale;
+                shootingVisualTransform.localScale = originScale;
                 holdingPoint.rotation = Quaternion.Euler(0, 0, angle);
             }
 

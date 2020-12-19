@@ -16,8 +16,7 @@ MonoBehaviour:
   attack: 0
   shootingSpeed: 0
   projectileSpeed: 0
-  speed: 10
+  speed: 4
   range: 0
   knockbackResist: 0
-  defaultWeapon: {fileID: 9010864256576260914, guid: dd96252667a42204dbb4bcffb5109abd,
-    type: 3}
+  defaultWeapon: {fileID: 0}

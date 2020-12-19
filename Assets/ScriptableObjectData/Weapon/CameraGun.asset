@@ -14,10 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePoolName: CameraBeam
   projectilesPerClip: 1
-  cooldownTime: 1
+  cooldownTime: 0.8
   attack: 5
   projectileSpeed: 0
-  shootingSpeed: 0.33
+  shootingSpeed: 1
   range: 40
   lastTime: 1
   recoilForce: 3

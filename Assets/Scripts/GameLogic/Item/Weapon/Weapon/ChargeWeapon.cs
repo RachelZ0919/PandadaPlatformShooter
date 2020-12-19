@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GameLogic.EntityBehavior;
+using VisualEffect;
 
 namespace GameLogic.Item.Weapon
 {
@@ -34,6 +35,9 @@ namespace GameLogic.Item.Weapon
                         //后坐力
                         transform.position = Vector3.zero;
                         ApplyRecoilForce();
+
+                        //特效
+                        if (effectName != null) EffectPool.instance.PlayEffect(effectName, shootingPoint.position, direction);
 
                         //换弹逻辑
                         lastShootingTime = Time.time;

@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
-using GameLogic.EntityStats;
+using GameLogic.EntityStats.Damages;
 
 namespace GameLogic.Item.Weapon
 {
@@ -50,7 +49,6 @@ namespace GameLogic.Item.Weapon
 
         protected virtual void OnTriggerEnter2D(Collider2D collision)
         {
-            Debug.Log("hit" + collision.name);
             //判断是不是在应该撞的layer
             if (!isDead && ((1 << collision.gameObject.layer) & layermaskToHit) > 0)
             {

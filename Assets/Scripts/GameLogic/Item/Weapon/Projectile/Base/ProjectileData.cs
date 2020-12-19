@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using GameLogic.EntityStats.Damages;
 
 namespace GameLogic.Item.Weapon
 {
@@ -79,14 +79,14 @@ namespace GameLogic.Item.Weapon
                 case ProjectileType.Straight:
                     {
                         Projectile proj = projectile.AddComponent<StraightProjectile>();
-                        proj.damage = GetDamage();
+                        proj.damage = Damage.GetDamage(damageType);
                         proj.collider = collider;
                         return proj;
                     }
                 case ProjectileType.Beam:
                     {
                         Projectile proj = projectile.AddComponent<BeamProjecitle>();
-                        proj.damage = GetDamage();
+                        proj.damage = Damage.GetDamage(damageType);
                         proj.collider = collider;
                         projectileSprite.drawMode = SpriteDrawMode.Sliced;
                         return proj;
@@ -95,16 +95,6 @@ namespace GameLogic.Item.Weapon
             return null;
         }
 
-        private Damage GetDamage()
-        {
-            switch (damageType)
-            {
-                case DamageType.NormalDamage:
-                    {
-                        return new NormalDamage();
-                    }
-            }
-            return null;
-        }
+
     }
 }

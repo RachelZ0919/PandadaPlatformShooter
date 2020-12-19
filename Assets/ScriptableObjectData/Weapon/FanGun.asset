@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74bc3a6195edc5140b7680524af30220, type: 3}
   m_Name: FanGun
   m_EditorClassIdentifier: 
-  projectilePoolName: 
+  projectilePoolName: FanGun
   projectilesPerClip: 0
   cooldownTime: 0
   attack: 3
-  projectileSpeed: 2
-  shootingSpeed: 1
+  projectileSpeed: 4
+  shootingSpeed: 1.2
   range: 100
   lastTime: 0
   recoilForce: 0

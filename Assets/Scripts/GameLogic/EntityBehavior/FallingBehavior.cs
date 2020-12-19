@@ -7,7 +7,8 @@ using UnityEngine;
 /// </summary>
 public class FallingBehavior : MonoBehaviour
 {
-    public float timer = 0.5f;
+    [SerializeField] private float timer = 0.5f;
+    private float currentTimer;
 
     PhysicsMaterial2D material;
     private Collider2D collider;
@@ -30,10 +31,29 @@ public class FallingBehavior : MonoBehaviour
     {
         collider = GetComponent<Collider2D>();
         material = new PhysicsMaterial2D();
+    }
+
+    private void OnEnable()
+    {
+        Initialize();
+    }
+
+    public void Initialize()
+    {
+        //关闭碰撞体
+        collider.enabled = false;
+
+        //设置碰撞体材质
         material.bounciness = 0.4f;
         material.friction = 0;
         collider.sharedMaterial = material;
-        //rigidbody.AddForce(new Vector2(50, 0));
+
+        //设置布尔变量
+        isJump = false;
+        hasCollider = false;
+
+        //重设timer
+        currentTimer = timer;
     }
 
     // Update is called once per frame
@@ -41,9 +61,9 @@ public class FallingBehavior : MonoBehaviour
     {
         if (!hasCollider)
         {
-            if (timer > 0)
+            if (currentTimer > 0)
             {
-                timer -= Time.deltaTime;
+                currentTimer -= Time.deltaTime;
             }
             else
             {

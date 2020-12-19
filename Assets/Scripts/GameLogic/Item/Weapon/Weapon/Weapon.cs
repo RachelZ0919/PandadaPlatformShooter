@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using GameLogic.EntityBehavior;
+using VisualEffect;
 
 namespace GameLogic.Item.Weapon
 {
+    [RequireComponent(typeof(SpriteRenderer))]
     /// <summary>
     /// 枪种类武器的逻辑
     /// </summary>
@@ -11,6 +13,8 @@ namespace GameLogic.Item.Weapon
     {
         //todo:支持多种子弹
         [SerializeField] protected WeaponData weaponData; //基本武器数据
+        [SerializeField] private Sprite gunSprite; //枪贴图
+        [SerializeField] private Sprite itemSprite; //物体
         protected Transform entity; //持有武器的实体
         protected bool isPickedUp = false; //当前是否被拾取
 
@@ -21,6 +25,8 @@ namespace GameLogic.Item.Weapon
         private float reloadStartTime; //换弹开始时间
 
         //动画
+        [SerializeField] private GameObject shootEffect; //武器发射特效 
+        protected string effectName;
         protected Animator animator;
         private Vector3 dampVelocity;
 
@@ -60,11 +66,14 @@ namespace GameLogic.Item.Weapon
                 transform.parent = behavior.holdingPoint;//把武器设置成实体子物体
                 transform.localPosition = Vector3.zero;
                 transform.localRotation = Quaternion.identity;
+                transform.localScale = new Vector3(1, 1, 1);
             }
 
+            //初始化枪
             InitializeGun();
 
-            //todo:枪显示
+            //设置枪的贴图
+            GetComponent<SpriteRenderer>().sprite = gunSprite;
         }
 
 
@@ -91,7 +100,8 @@ namespace GameLogic.Item.Weapon
                 }
 
                 //射击动画
-                if (animator != null) animator.SetFloat("shootingTime", Time.time - lastShootingTime);
+                //if (animator != null) animator.SetFloat("shootingTime", Time.time - lastShootingTime);
+
 
                 //后坐力回复
                 if (Vector3.Distance(transform.localPosition, Vector3.zero) > 0.01f)
@@ -140,6 +150,11 @@ namespace GameLogic.Item.Weapon
             int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹
             //申请对象池
             ProjectilePool.instance.AddPool(weaponData.projectilePoolName, weaponData.projectile, poolSize, false);
+            if (shootEffect != null)
+            {
+                EffectPool.instance.AddEffect(shootEffect.name, poolSize, shootEffect);
+                effectName = shootEffect.name;
+            }
         }
 
         /// <summary>
