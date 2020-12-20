@@ -15,6 +15,7 @@ namespace GameLogic.Item.Weapon
         [SerializeField] protected WeaponData weaponData; //基本武器数据
         [SerializeField] private Sprite gunSprite; //枪贴图
         [SerializeField] private Sprite itemSprite; //物体
+        [SerializeField] private bool destroyOnLoad = false;
         protected Transform entity; //持有武器的实体
         protected bool isPickedUp = false; //当前是否被拾取
 
@@ -149,7 +150,7 @@ namespace GameLogic.Item.Weapon
                                       weaponData.shootingSpeed + weaponData.cooldownTime); //从发射到消亡能发射的子弹数量（以弹夹为单位） = 平均时间 / （一弹夹子弹量 * 子弹发射时间间隔 + 换弹时间）
             int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹
             //申请对象池
-            ProjectilePool.instance.AddPool(weaponData.projectilePoolName, weaponData.projectile, poolSize, false);
+            ProjectilePool.instance.AddPool(weaponData.projectilePoolName, weaponData.projectile, poolSize, destroyOnLoad);
             if (shootEffect != null)
             {
                 EffectPool.instance.AddEffect(shootEffect.name, poolSize, shootEffect);

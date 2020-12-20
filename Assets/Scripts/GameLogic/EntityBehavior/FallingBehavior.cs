@@ -8,10 +8,13 @@ using UnityEngine;
 public class FallingBehavior : MonoBehaviour
 {
     [SerializeField] private float timer = 0.5f;
+    [SerializeField] private bool initializeOnAwake = false;
     private float currentTimer;
 
     PhysicsMaterial2D material;
     private Collider2D collider;
+    private Rigidbody2D rigidbody;
+
 
     // 是否弹起过
     private bool isJump = false;
@@ -31,14 +34,13 @@ public class FallingBehavior : MonoBehaviour
     {
         collider = GetComponent<Collider2D>();
         material = new PhysicsMaterial2D();
+        rigidbody = GetComponent<Rigidbody2D>();
+        rigidbody.simulated = false;
+
+        Initialize(Vector2.zero);
     }
 
-    private void Start()
-    {
-        Initialize();
-    }
-
-    public void Initialize()
+    public void Initialize(Vector2 initialVelocity)
     {
         //关闭碰撞体
         collider.enabled = false;
@@ -51,6 +53,10 @@ public class FallingBehavior : MonoBehaviour
         //设置布尔变量
         isJump = false;
         hasCollider = false;
+
+        //设置初始速度
+        rigidbody.simulated = true;
+        rigidbody.velocity = initialVelocity;
 
         //重设timer
         currentTimer = timer;

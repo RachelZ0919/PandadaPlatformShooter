@@ -20,7 +20,7 @@ namespace GameLogic.EntityBehavior
         private bool isTurning;
         private bool turningEnd;
         private bool isStopping;
-        private bool isOnGround;
+        [HideInInspector] public bool isOnGround = true;
 
         #endregion
 
@@ -59,6 +59,8 @@ namespace GameLogic.EntityBehavior
         //音效
         public bool enableAudio = false;
         [HideInInspector] public AudioManager audio;
+        private bool lastFrameIsOnGround = true;
+        [SerializeField] private LandDetector landAudio;
 
 
         #endregion
@@ -85,6 +87,12 @@ namespace GameLogic.EntityBehavior
                 originScale.x = Mathf.Abs(originScale.x);
                 reverseScale = originScale;
                 reverseScale.x *= -1;
+            }
+
+            if(landAudio != null)
+            {
+                landAudio.mov = this;
+                if (enableAudio) landAudio.audio = audio;
             }
         }
 
@@ -172,17 +180,17 @@ namespace GameLogic.EntityBehavior
         {
             if (isOnGround)//检测是否在地面
             {
-                int layerMask = 1<<8 | 1<<9 | 1<<10;
+                int layerMask = 1 << 8 | 1 << 9 | 1 << 10;
                 layerMask &= ~(1 << gameObject.layer);
-                Vector3 positionOffset = new Vector3(width / 2, 0, 0) + hitBoxOffset;
+                Vector3 positionOffset = new Vector3(width / 2, 0, 0);
                 bool hitNothing = true;
 
                 //左右中各测一次是否接触地面，如果均没有接触，就说明没有在地面上。
-                RaycastHit2D hit = Physics2D.Raycast(transform.position + positionOffset , Vector2.down, height/2 + 0.1f , layerMask);
+                RaycastHit2D hit = Physics2D.Raycast(transform.position + hitBoxOffset + positionOffset , Vector2.down, height/2 + 0.3f , layerMask);
                 if (hit) hitNothing = false;
-                hit = Physics2D.Raycast(transform.position - positionOffset, Vector2.down, height / 2 + 0.1f, layerMask);
+                hit = Physics2D.Raycast(transform.position + hitBoxOffset - positionOffset, Vector2.down, height / 2 + 0.3f, layerMask);
                 if (hit) hitNothing = false;
-                hit = Physics2D.Raycast(transform.position, Vector2.down, height / 2 + 0.1f, layerMask);
+                hit = Physics2D.Raycast(transform.position + hitBoxOffset, Vector2.down, height / 2 + 0.3f, layerMask);
                 if (hit) hitNothing = false;
                 
                 if (hitNothing)
@@ -230,6 +238,21 @@ namespace GameLogic.EntityBehavior
             //减少跳跃缓冲帧
             leavingGroundJumpingFrame = Mathf.Max(0, leavingGroundJumpingFrame - 1);
             fallingJumpingFrame = Mathf.Max(0, fallingJumpingFrame - 1);
+
+            //检测是否播放跳跃音效
+
+
+            //if (enableAudio && audio != null)
+            //{
+            //    if (!lastFrameIsOnGround && isOnGround)
+            //    {
+            //        Debug.Log("land");
+            //        audio.PlayAudio("landAudio");
+            //    }
+            //}
+
+            //lastFrameIsOnGround = isOnGround;
+
         }
 
 

@@ -37,6 +37,12 @@ public class MiddleText : MonoBehaviour
 
     [SerializeField] private Text text;
     [SerializeField] private RectTransform bubble;
+    private AudioSource audio;
+
+    private void Awake()
+    {
+        audio = GetComponent<AudioSource>();
+    }
 
     void Start()
     {
@@ -60,6 +66,7 @@ public class MiddleText : MonoBehaviour
             hasStartShowingText = true;
             currentLineIndex = 0;
             totalWords = lines[currentLineIndex++];
+            audio.Play();
             ResetBubble();
         }
     }
@@ -91,6 +98,7 @@ public class MiddleText : MonoBehaviour
                         text.text = "";
                         text.text += totalWords[currentWordIndex++];
                         ResetBubble();
+                        audio.Play();
                         lineEnd = false;
                     }
 
@@ -104,6 +112,7 @@ public class MiddleText : MonoBehaviour
                     if (totalWords.Length > currentWordIndex)
                     {
                         text.text += totalWords[currentWordIndex++];
+                        audio.Play();
 
                         if (currentWordIndex / 22 < 1)
                         {

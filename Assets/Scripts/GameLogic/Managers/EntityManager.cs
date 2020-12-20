@@ -26,6 +26,7 @@ namespace GameLogic.Managers
         public delegate void OnDeath(EntityManager entity);
 
         public OnDeath OnObjectDeath;
+        public OnDeath OnObjectVisuallyDeath;
         private bool hasDead;
 
         private void Awake()
@@ -60,7 +61,7 @@ namespace GameLogic.Managers
         private void Start()
         {
             Initialize();
-            Debug.Log("star" + name);
+            Debug.Log("start" + name);
         }
 
 
@@ -103,7 +104,10 @@ namespace GameLogic.Managers
 
                 //开始死亡动画
                 animator.SetBool("isDead", true);
-               
+
+                //死亡通知
+                OnObjectVisuallyDeath?.Invoke(this);
+
             }
         }
 
@@ -113,7 +117,7 @@ namespace GameLogic.Managers
         public void OnDeadAnimationEnd()
         {
             //通知物体死亡
-            OnObjectDeath(this);
+            OnObjectDeath?.Invoke(this);
             gameObject.SetActive(false);
         }
 

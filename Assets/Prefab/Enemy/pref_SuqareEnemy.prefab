@@ -155,7 +155,7 @@ MonoBehaviour:
   startAcc: 400
   stopAcc: 800
   turnAcc: 800
-  jumpForce: 40
+  jumpForce: 10
   jumpingBufferFrame: 3
   movingVisualTransform: {fileID: 0}
   enableAudio: 0
@@ -286,6 +286,9 @@ MonoBehaviour:
   damageAmount: 1
   hitDuration: 1
   hasKnockBack: 1
+  noColliderDuration: 0.7
+  knockBackSmall: 6
+  knockBackBig: 8
 --- !u!1 &6844655678237936179
 GameObject:
   m_ObjectHideFlags: 0

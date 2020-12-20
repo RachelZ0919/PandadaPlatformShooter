@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePoolName: FanGun
   projectilesPerClip: 0
-  cooldownTime: 0
+  cooldownTime: 1
   attack: 3
-  projectileSpeed: 4
-  shootingSpeed: 1.2
+  projectileSpeed: 2.5
+  shootingSpeed: 0.8
   range: 100
   lastTime: 0
   recoilForce: 0
   knockbackForce: 0
   projectile: {fileID: 11400000, guid: a2889869b58033f47a28ec119fc2753c, type: 2}
-  shootingAudio: {fileID: 0}
+  shootingAudio: {fileID: 8300000, guid: 8ba3a1424bb5f1c4a9f7e6e93dcd4acb, type: 3}

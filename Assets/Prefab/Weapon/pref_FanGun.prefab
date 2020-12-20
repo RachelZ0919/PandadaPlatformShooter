@@ -142,6 +142,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 73cef4af08715b9438915b46e47ec4de, type: 2}
   gunSprite: {fileID: 0}
   itemSprite: {fileID: 0}
+  destroyOnLoad: 1
   shootEffect: {fileID: 0}
   shootingPoints:
   - {fileID: 8724798053144797198}

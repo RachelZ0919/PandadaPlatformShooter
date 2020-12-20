@@ -33,7 +33,12 @@ namespace GameLogic.Controller
         {
             if (movingJoystick.enabled)
             {
-                movingBehavior.MoveInDirection(movingJoystick.Direction.x);
+                
+                if (movingJoystick.Direction.magnitude > 0.25f)
+                {
+                    movingBehavior.MoveInDirection(movingJoystick.Direction.x);
+                }
+
 
                 if (Input.GetKey(KeyCode.A))
                 {

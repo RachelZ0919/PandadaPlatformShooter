@@ -18,6 +18,12 @@ namespace GameLogic.Managers
 
         private bool gameHasStart = false;
         private bool gameHasEnd = false;
+        [HideInInspector] public bool playerDead = false;
+
+        private Change_Scene sceneChange;
+        private DoorBehaviour door;
+        [SerializeField] private bool fadeWhenStart = false;
+        [SerializeField] private bool spawnRightAfterWin = false;
 
 
 
@@ -33,6 +39,10 @@ namespace GameLogic.Managers
                 for (int i = 0; i < spawnPointObj.Length; i++)
                 {
                     spawnPoints[i] = spawnPointObj[i].GetComponent<SpawnPointManager>();
+                    if(spawnPoints[i] == null)
+                    {
+                        Debug.LogWarning(spawnPointObj[i].name + " is not a spawn point!");
+                    }
                 }
 
                 //获取玩家SpawnPoint
@@ -46,6 +56,8 @@ namespace GameLogic.Managers
                     Debug.LogWarning("This scene doesn't have player!");
                 }
 
+                sceneChange = GetComponentInChildren<Change_Scene>();
+                door = GetComponentInChildren<DoorBehaviour>();
                 deathUI.SetActive(false);
             }
             else
@@ -56,6 +68,11 @@ namespace GameLogic.Managers
 
         private void Start()
         {
+            sceneChange.sceneStarting = true;
+            if (!fadeWhenStart)
+            {
+                sceneChange.ImageClear();
+            }
             GameStart();
         }
 
@@ -72,6 +89,7 @@ namespace GameLogic.Managers
             if (obj.CompareTag("Player"))
             {
                 Debug.Log("player dead");
+                playerDead = true;
                 controlUI.SetActive(false);
                 deathUI.SetActive(true);
                 gameHasEnd = true;
@@ -80,8 +98,7 @@ namespace GameLogic.Managers
                 enemyCount--;
                 if(enemyCount == 0)
                 {
-                    Debug.Log("Player Win!");
-                    //todo:进入下一关
+                    if (spawnRightAfterWin) door.Spawn();
                 }
             }
         }
@@ -120,12 +137,13 @@ namespace GameLogic.Managers
             controlUI.SetActive(allowControlAtStart);
             for(int i = 0; i < spawnPoints.Length; i++)
             {
+                if(spawnPoints[i] == null)
+                {
+                    continue;
+                }
                 spawnPoints[i].Spawn();
             }
         }
-
-
-
 
 
         /// <summary>
@@ -142,16 +160,22 @@ namespace GameLogic.Managers
 
         public void ReplayGame()
         {
-            Debug.Log("replay");
+            GoToLevel(1);
         }
 
         public void GoToLevel(int level)
         {
             Time.timeScale = 1;
             gameHasEnd = false;
-            SceneManager.LoadScene(level);
+            sceneChange.scene_id = level;
+            sceneChange.sceneStarting = false;
         }
 
+
+        public void SpawnLeavePortal()
+        {
+            door.Spawn();
+        }
 
 
         public void SpawnPlayer()

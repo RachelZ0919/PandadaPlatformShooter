@@ -19,6 +19,10 @@ namespace GameLogic.EntityBehavior
         /// 击中后是否开启震屏
         /// </summary>
         [SerializeField] private bool enableScreenShake = false;
+        /// <summary>
+        /// 是否开启音效
+        /// </summary>
+        [SerializeField] private bool enableAudio = false;
 
         public bool isIndivisible
         {
@@ -98,7 +102,7 @@ namespace GameLogic.EntityBehavior
                 hitStartTime = Time.time;
 
                 //音效
-                if(audio != null) audio.PlayAudio("hitAudio");
+                if(enableAudio && audio != null) audio.PlayAudio("hitAudio");
 
                 if (enableScreenShake)
                 {

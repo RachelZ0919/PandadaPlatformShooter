@@ -23,4 +23,4 @@ MonoBehaviour:
   recoilForce: 0
   knockbackForce: 1
   projectile: {fileID: 11400000, guid: 6d1dda0824b660b43abbb2689df9df84, type: 2}
-  shootingAudio: {fileID: 0}
+  shootingAudio: {fileID: 8300000, guid: 8ba3a1424bb5f1c4a9f7e6e93dcd4acb, type: 3}

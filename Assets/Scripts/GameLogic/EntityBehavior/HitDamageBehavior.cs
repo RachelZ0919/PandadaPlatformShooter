@@ -12,9 +12,12 @@ namespace GameLogic.EntityBehavior
         [SerializeField] private float damageAmount;
         [SerializeField] private float hitDuration = 1f;
         [SerializeField] private bool hasKnockBack = true;
+        [SerializeField] private float noColliderDuration = 0.7f;
+        [SerializeField] private float knockBackSmall = 6;
+        [SerializeField] private float knockBackBig = 8;
 
         private float lastHitTime;
-        private int originLayer;
+        private int originlayer;
 
         List<HitBehavior> objectToHit = new List<HitBehavior>();
 
@@ -26,7 +29,7 @@ namespace GameLogic.EntityBehavior
         {
             damage = Damage.GetDamage(damageType);
             damage.damage = damageAmount;
-            originLayer = gameObject.layer;
+            originlayer = gameObject.layer;
         }
 
         private void Start()
@@ -36,9 +39,9 @@ namespace GameLogic.EntityBehavior
 
         private void Update()
         {
-            if (gameObject.layer == LayerMask.NameToLayer("TiredEnemy") && Time.time - lastHitTime > 0.7f)
+            if (gameObject.layer == LayerMask.NameToLayer("TiredEnemy") && Time.time - lastHitTime > noColliderDuration) 
             {
-                gameObject.layer = originLayer;
+                gameObject.layer = originlayer;
             }
 
 
@@ -46,8 +49,9 @@ namespace GameLogic.EntityBehavior
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-
-            if (collision.gameObject.layer == 9)
+            int layermaskToHit = 1 << 8 | 1 << 9;
+            layermaskToHit &= ~(1 << gameObject.layer);
+            if (((1 << collision.gameObject.layer) & layermaskToHit) > 0)
             {
                 HitBehavior hitBehavior = collision.gameObject.GetComponent<HitBehavior>();
                 if(hitBehavior != null)
@@ -69,7 +73,9 @@ namespace GameLogic.EntityBehavior
         {
             if (Time.time - lastHitTime > hitDuration)
             {
-                if (collision.gameObject.layer == 9)
+                int layermaskToHit = 1 << 8 | 1 << 9;
+                layermaskToHit &= ~(1 << gameObject.layer);
+                if (((1 << collision.gameObject.layer) & layermaskToHit) > 0)
                 {
                     HitBehavior hitBehavior = collision.gameObject.GetComponent<HitBehavior>();
                     if(hitBehavior != null)
@@ -121,11 +127,11 @@ namespace GameLogic.EntityBehavior
                 {
                     if (Mathf.Abs(direction.y) <= 0.1f)
                     {
-                        damage.knockbackForce = 7f;
+                        damage.knockbackForce = knockBackSmall;
                     }
                     else
                     {
-                        damage.knockbackForce = 10f;
+                        damage.knockbackForce = knockBackBig;
                         lastHitTime = Time.time;
                         gameObject.layer = LayerMask.NameToLayer("TiredEnemy");
                     }
@@ -141,7 +147,9 @@ namespace GameLogic.EntityBehavior
 
         private void OnCollisionExit2D(Collision2D collision)
         {
-            if (collision.gameObject.layer == 9)
+            int layermaskToHit = 1 << 8 | 1 << 9;
+            layermaskToHit &= ~(1 << gameObject.layer);
+            if (((1 << collision.gameObject.layer) & layermaskToHit) > 0)
             {
                 HitBehavior hitBehavior = collision.gameObject.GetComponent<HitBehavior>();
                 if(hitBehavior != null)

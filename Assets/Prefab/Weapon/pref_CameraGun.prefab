@@ -78,6 +78,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 31a4fe0b25184a249a8a7f54254b66a4, type: 2}
+  gunSprite: {fileID: 0}
+  itemSprite: {fileID: 0}
+  destroyOnLoad: 1
+  shootEffect: {fileID: 0}
   shootingPoint: {fileID: 6121447632463780889}
 --- !u!212 &376308482644737301
 SpriteRenderer:
