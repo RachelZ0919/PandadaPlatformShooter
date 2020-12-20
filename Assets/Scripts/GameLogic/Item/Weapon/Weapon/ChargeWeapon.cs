@@ -54,7 +54,7 @@ namespace GameLogic.Item.Weapon
                     }
                     else
                     {
-                        Debug.Log("isCharging");
+                        //Debug.Log("isCharging");
                         float xAmount = Random.Range(-1f, 1f) * 0.05f;
                         float yAmount = Random.Range(-1f, 1f) * 0.05f;
                         transform.localPosition = new Vector3(xAmount, yAmount, 0);

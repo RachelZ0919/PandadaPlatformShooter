@@ -257,7 +257,7 @@ namespace GameLogic.EntityBehavior
             }
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
+        private void OnCollisionStay2D(Collision2D collision)
         {
             if (((1 << collision.gameObject.layer) & (1 << 8 | 1 << 10)) > 0) 
             {

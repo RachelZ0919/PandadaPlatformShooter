@@ -186,8 +186,14 @@ namespace GameLogic.Item.Weapon
             Projectile projectile = ProjectilePool.instance.SpawnAProjectile(weaponData.projectilePoolName);
 
             //射子弹
-            projectile.layermaskToHit = 1 << 8 | 1 << 9 | 1 << 10;
-            projectile.layermaskToHit &= ~(1 << transform.parent.gameObject.layer);
+            if(transform.parent.gameObject.layer == 9)
+            {
+                projectile.layermaskToHit = 1 << 8 | 1 << 10 | 1 << 12 | 1 << 13;
+            }
+            else
+            {
+                projectile.layermaskToHit = 1 << 9 | 1 << 8;
+            }
             projectile.damage.damage = weaponData.attack + baseStats.baseAttack;
             projectile.damage.knockbackForce = weaponData.knockbackForce;
             projectile.speed = weaponData.projectileSpeed + baseStats.baseProjectileSpeed;

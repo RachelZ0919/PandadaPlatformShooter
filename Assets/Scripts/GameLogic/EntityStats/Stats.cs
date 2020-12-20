@@ -194,7 +194,7 @@ namespace GameLogic.EntityStats
             {
                 stats.Add(name, value);
             }
-            OnStatsChanged(this);
+            if(OnStatsChanged != null)  OnStatsChanged(this);
         }
 
         /// <summary>

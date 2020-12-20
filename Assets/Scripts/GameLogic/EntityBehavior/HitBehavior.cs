@@ -38,6 +38,8 @@ namespace GameLogic.EntityBehavior
         private Vector3 lastOffset;
         private Vector3 recoverVel;
 
+        private bool needSlowDown = false;
+
         [HideInInspector]public AudioManager audio;
         
 
@@ -73,7 +75,7 @@ namespace GameLogic.EntityBehavior
         /// <param name="damage">伤害量</param>
         /// <param name="knockbackForce">击退强度</param>
         /// <param name="direction">击退方向</param>
-        public void GetHit(float damage, float knockbackForce, Vector2 direction) 
+        public void GetHit(float damage, float knockbackForce, Vector2 direction, bool isTouchDamage) 
         {
             if (Time.time - hitStartTime >= indivisibleDuration)
             {
@@ -84,7 +86,7 @@ namespace GameLogic.EntityBehavior
                 {
                     float knockBack = (Mathf.Max(0, knockbackForce - stat.knockBackResist) + 0.2f) * 0.1f;
                     recoverOffset = direction.normalized * Mathf.Min(knockBack, 0.5f);
-                    Vector3 positionOffset = direction.normalized * knockBack * 1.5f;
+                    Vector3 positionOffset = direction.normalized * knockBack * 1.3f;
                     transform.position -= positionOffset;
                     lastOffset = currentOffset = Vector3.zero;
                 }
@@ -102,13 +104,15 @@ namespace GameLogic.EntityBehavior
                 {
                     CameraShake.instance.ShakeScreen(0.3f, 0.02f);
                 }
+
+                needSlowDown = isTouchDamage;
             }
         }
 
         private void LateUpdate()
         {
             animator.SetBool("isHit", false);
-            if (Vector3.Distance(recoverOffset, currentOffset) > 0.01f)
+            if (needSlowDown && Vector3.Distance(recoverOffset, currentOffset) > 0.01f)
             {
                 rigidbody.velocity *= 0.2f;
             }

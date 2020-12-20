@@ -30,6 +30,7 @@ namespace GameLogic.Managers
 
         private void Awake()
         {
+            Debug.Log("Entity -" + name);
             //加载组件
             animator = GetComponent<Animator>();
             shootingBehavior = GetComponent<ShootingBehavior>();
@@ -59,6 +60,7 @@ namespace GameLogic.Managers
         private void Start()
         {
             Initialize();
+            Debug.Log("star" + name);
         }
 
 

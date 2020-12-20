@@ -28,7 +28,7 @@ namespace GameLogic.EntityStats.Damages
         /// <param name="stat">人物属性</param>
         /// <param name="hitBehavior">受击后行为</param>
         /// <param name="direction">受击方向，只有x轴</param>
-        abstract public void DealDamage(HitBehavior hitBehavior, Stats stat, Vector2 direction);
+        abstract public void DealDamage(HitBehavior hitBehavior, Stats stat, Vector2 direction, bool isTouchDamage = false);
 
         static public Damage GetDamage(DamageType damageType)
         {
