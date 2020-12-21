@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections;
+using GameLogic.Managers;
 using GameLogic.Item;
 using GameLogic.EntityStats;
 
@@ -7,7 +7,8 @@ namespace GameLogic.EntityBehavior
 {
     public class PickingBehavior : MonoBehaviour
     {
-        [SerializeField] private bool pickUpStatItem = true;
+        [SerializeField] private bool usingAudio = true;
+        [HideInInspector] public AudioManager audio;
         private IItem touchingItem;
 
         /// <summary>
@@ -17,6 +18,7 @@ namespace GameLogic.EntityBehavior
         {
             if (touchingItem != null)
             {
+
                 touchingItem.PickUp(transform);
             }
         }
@@ -25,6 +27,10 @@ namespace GameLogic.EntityBehavior
         {
             if(collision.gameObject.layer == 11)
             {
+                if (usingAudio && audio != null)
+                {
+                    audio.PlayAudio("pick_up");
+                }
                 IItem item = collision.collider.GetComponent<IItem>();
                 item.PickUp(transform);
             }

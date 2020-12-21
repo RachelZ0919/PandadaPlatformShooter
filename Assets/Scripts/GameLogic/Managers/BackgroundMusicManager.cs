@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 namespace GameLogic.Managers
 {
@@ -10,14 +10,11 @@ namespace GameLogic.Managers
             DontDestroyOnLoad(this);
         }
 
-        private void Update()
+        private void OnLevelWasLoaded(int level)
         {
-            if(GameManager.instance != null)
+            if (level >= 12)
             {
-                if (GameManager.instance.playerDead)
-                {
-                    Destroy(gameObject);
-                }
+                Destroy(gameObject);
             }
         }
     }

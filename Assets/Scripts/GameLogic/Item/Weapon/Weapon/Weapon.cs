@@ -148,7 +148,8 @@ namespace GameLogic.Item.Weapon
             float projectileLife = length / weaponData.projectileSpeed; //子弹从发射到消亡的平均时间
             float totalClips = projectileLife / (weaponData.projectilesPerClip /
                                       weaponData.shootingSpeed + weaponData.cooldownTime); //从发射到消亡能发射的子弹数量（以弹夹为单位） = 平均时间 / （一弹夹子弹量 * 子弹发射时间间隔 + 换弹时间）
-            int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹
+            //int poolSize = Mathf.CeilToInt(totalClips * weaponData.projectilesPerClip + 3); //换算成子弹数量，并且加了一丢丢子弹K
+            int poolSize = 5;
             //申请对象池
             ProjectilePool.instance.AddPool(weaponData.projectilePoolName, weaponData.projectile, poolSize, destroyOnLoad);
             if (shootEffect != null)

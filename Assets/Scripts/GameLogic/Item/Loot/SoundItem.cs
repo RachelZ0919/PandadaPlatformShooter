@@ -6,6 +6,7 @@ namespace GameLogic.Item.Loot
     public class SoundItem : MonoBehaviour, IItem
     {
         [SerializeField] private AudioClip backgoundMusic;
+        
         private AudioSource audio;
 
         private Rigidbody2D rigidbody;

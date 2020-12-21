@@ -41,7 +41,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
-    - _AnimationTime: 2.0064468
+    - _AnimationTime: 2.0036817
     - _EnableExternalAlpha: 0
     m_Colors:
     - _Before_Recover_Color: {r: 1, g: 0, b: 0.9473176, a: 0}

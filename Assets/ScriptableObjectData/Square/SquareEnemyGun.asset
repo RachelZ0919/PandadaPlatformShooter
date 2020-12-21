@@ -16,7 +16,7 @@ MonoBehaviour:
   projectilesPerClip: 100
   cooldownTime: 0
   attack: 1
-  projectileSpeed: 10
+  projectileSpeed: 7
   shootingSpeed: 1
   range: 100
   lastTime: 0

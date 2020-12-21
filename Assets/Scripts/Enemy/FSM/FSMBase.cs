@@ -24,17 +24,18 @@ namespace AI.FSM
         [Tooltip("默认状态")]
         public FSMStateID defaultStateID;        
         private FSMState currentState;
-        private FSMState defaultState;
+        public FSMState defaultState;
 
         //public FSMStateID test_CurrentStateID;
-        [HideInInspector] public MovingBehavior movingBehavior;//移动
         [HideInInspector] public ShootingBehavior shootingBehavior;//射击行为
         [HideInInspector] public Stats chStatus; //人物状态
+        [HideInInspector] public Animator anim;
+        public ParticleSystem parEffet;
 
         #endregion
 
         #region Target Searching
-        
+
         [Tooltip("攻击距离")]
         public float attackDistance;
         [Tooltip("视野距离")]
@@ -48,6 +49,13 @@ namespace AI.FSM
 
         public float runSpeed = 4f;
         public float walkSpeed = 2f;
+
+        //控制播放攻击动画
+        public float holdingTime = 0.42f;
+        public float attackTime = 6f;
+        public bool isAttacking = false;
+        [HideInInspector] public float timer;
+
         [Tooltip("巡逻点")]
         public Transform[] wayPoints;
         public PatrolMode patrolMode;
@@ -59,6 +67,8 @@ namespace AI.FSM
         /// 是否可以移动
         /// </summary>
         public bool canMove = true;
+        //巡逻点索引
+        private int index = 0;
         #endregion
 
         #endregion
@@ -73,6 +83,12 @@ namespace AI.FSM
         {
             InitComponent();
             ConfigFSM();
+            
+        }
+
+        private void Start()
+        {
+            parEffet.Stop();
         }
 
         private void OnEnable()
@@ -95,9 +111,9 @@ namespace AI.FSM
         /// </summary>
         private void InitComponent()
         {
-            movingBehavior = GetComponent<MovingBehavior>();
             shootingBehavior = GetComponent<ShootingBehavior>();
             chStatus = GetComponent<Stats>();
+            anim = GetComponent<Animator>();
         }
 
         /// <summary>
@@ -181,10 +197,15 @@ namespace AI.FSM
         /// <param name="moveSpeed">移动速度</param>
         public void MoveToTarget(Vector3 position, float stopDistance, float moveSpeed)
         {
+            if (wayPoints[index].GetComponent<Collider2D>().OverlapPoint(transform.position))
+            {
+                index = (index + 1) % wayPoints.Length;
+            }
             if (Vector3.Distance(transform.position, position) > stopDistance && canMove)
             {
                 Vector3 moveDirection = position - transform.position;
-                movingBehavior.MoveInDirection(moveDirection.x);
+                transform.position = Vector3.MoveTowards(transform.position,
+                    wayPoints[index].position, moveSpeed * Time.deltaTime);
             }
         }
 
@@ -228,5 +249,17 @@ namespace AI.FSM
 
         #endregion
 
+        //攻击动画帧事件
+        public void Attack()
+        {
+            Vector3 direction = targetTF.position - transform.position;
+            shootingBehavior.Shoot(direction);
+            parEffet.Play();
+        }
+
+        public void StopParticle()
+        {
+            parEffet.Stop();
+        }
     }
 }

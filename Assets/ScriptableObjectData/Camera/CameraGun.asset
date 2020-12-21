@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   projectilePoolName: CameraBeam
   projectilesPerClip: 1
-  cooldownTime: 1
-  attack: 5
+  cooldownTime: 1.8
+  attack: 3
   projectileSpeed: 0
   shootingSpeed: 0.8
   range: 40
@@ -23,4 +23,4 @@ MonoBehaviour:
   recoilForce: 3
   knockbackForce: 0
   projectile: {fileID: 11400000, guid: 962649c5e306d2f4a8bacdbdb781df4b, type: 2}
-  shootingAudio: {fileID: 0}
+  shootingAudio: {fileID: 8300000, guid: 229868d4d225fc64b9bf363dc561fc5d, type: 3}

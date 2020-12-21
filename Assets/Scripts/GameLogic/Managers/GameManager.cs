@@ -17,7 +17,7 @@ namespace GameLogic.Managers
         [SerializeField] private bool allowControlAtStart = true;
 
         private bool gameHasStart = false;
-        private bool gameHasEnd = false;
+        [HideInInspector] public bool gameHasEnd = false;
         [HideInInspector] public bool playerDead = false;
 
         private Change_Scene sceneChange;
@@ -160,7 +160,7 @@ namespace GameLogic.Managers
 
         public void ReplayGame()
         {
-            GoToLevel(1);
+            GoToLevel(2);
         }
 
         public void GoToLevel(int level)

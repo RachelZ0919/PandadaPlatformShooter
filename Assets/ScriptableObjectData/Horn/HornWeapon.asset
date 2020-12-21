@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74bc3a6195edc5140b7680524af30220, type: 3}
+  m_Name: HornWeapon
+  m_EditorClassIdentifier: 
+  projectilePoolName: HornGun
+  projectilesPerClip: 100
+  cooldownTime: 0
+  attack: 1
+  projectileSpeed: 10
+  shootingSpeed: 3
+  range: 100
+  lastTime: 0
+  recoilForce: 0
+  knockbackForce: 0
+  projectile: {fileID: 11400000, guid: 4d7b5b75d02f7724f882f2beb082fd9a, type: 2}
+  shootingAudio: {fileID: 8300000, guid: 8ba3a1424bb5f1c4a9f7e6e93dcd4acb, type: 3}

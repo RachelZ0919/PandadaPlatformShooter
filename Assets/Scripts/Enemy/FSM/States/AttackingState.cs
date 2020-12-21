@@ -10,8 +10,7 @@ namespace AI.FSM
     /// </summary>
     public class AttackingState : FSMState
     {
-        private float attackTime;
-
+        
         public override void Init()
         {
             StateID = FSMStateID.Attacking;
@@ -20,18 +19,33 @@ namespace AI.FSM
         public override void EnterState(FSMBase fsm)
         {
             base.EnterState(fsm);
+            //fsm.timer = 0;
         }
 
         public override void ActionState(FSMBase fsm)
         {
             base.ActionState(fsm);
-            Vector3 direction = fsm.targetTF.position - fsm.transform.position;
-            fsm.shootingBehavior.Shoot(direction);
+            //fsm.timer += Time.deltaTime;
+            fsm.anim.SetBool("isAttack", true);
+
+            //if (fsm.timer > fsm.holdingTime && !fsm.isAttacking)
+            //{
+            //    fsm.isAttacking = true;
+            //    //Vector3 direction = fsm.targetTF.position - fsm.transform.position;
+            //    //fsm.shootingBehavior.Shoot(direction);
+            //}
+            //else if (fsm.timer > fsm.attackTime && fsm.isAttacking)
+            //{
+            //    fsm.timer = 0;
+            //    fsm.isAttacking = false;
+            //    fsm.anim.SetBool("isAttack", false);
+            //}
         }
 
         public override void ExitState(FSMBase fsm)
         {
             base.ExitState(fsm);
+            fsm.anim.SetBool("isAttack", false);
         }
 
         

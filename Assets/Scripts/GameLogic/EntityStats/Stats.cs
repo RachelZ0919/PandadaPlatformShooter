@@ -176,7 +176,7 @@ namespace GameLogic.EntityStats
             {
                 stats[name] = value;
             }
-            OnStatsChanged(this);
+            OnStatsChanged?.Invoke(this);
         }
 
         /// <summary>
@@ -229,6 +229,7 @@ namespace GameLogic.EntityStats
         public void InitializeStats(StatData statData)
         {
             ClearProperty();
+            if(stats == null) stats = new Dictionary<string, float>();
             AddProperty("health", statData.health);
             AddProperty("maxHealth", statData.health);
             AddProperty("attack", statData.attack);

@@ -48,6 +48,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 13c84b96dc72c9e43bd98116b266a34c, type: 2}
   gunSprite: {fileID: 21300000, guid: 3ae82805dbb4ab2459ba5941e32ae6e8, type: 3}
   itemSprite: {fileID: 21300000, guid: ee2f541d61e5ec64d86a736f07c6460e, type: 3}
+  destroyOnLoad: 0
   shootEffect: {fileID: 3407604702255274836, guid: d86b0dbff89a1fd438fa269dd810f390,
     type: 3}
   shootingPoint: {fileID: 4896134030357160730}
@@ -69,7 +70,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

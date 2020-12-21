@@ -13,6 +13,9 @@ namespace GameLogic.Managers
     public class EntityManager : MonoBehaviour
     {
         [SerializeField] private StatData statData;
+        //[SerializeField] private GameObject defaultWeapon;
+        //[SerializeField] private float startHP;
+
         [SerializeField] private AudioManager usingAudio;
         
         private Animator animator;
@@ -56,6 +59,13 @@ namespace GameLogic.Managers
             {
                 hitBehavior.audio = usingAudio;
             }
+
+            PickingBehavior pickingBehavior = GetComponent<PickingBehavior>();
+            if(pickingBehavior != null)
+            {
+                pickingBehavior.audio = usingAudio;
+            }
+            
         }
 
         private void Start()
@@ -75,13 +85,17 @@ namespace GameLogic.Managers
             hasDead = false;
             GameManager.instance.OnObjectCreate(this);
 
-            //装枪
-            if(shootingBehavior != null)
+            ////装枪
+            if (shootingBehavior != null)
             {
-                if (statData.defaultWeapon != null)
+                Debug.Log("check gun");
+
+                if (statData != null && statData.defaultWeapon != null)
                 {
-                    Weapon weapon = Instantiate(statData.defaultWeapon).GetComponent<Weapon>();
-                    weapon.PickUp(transform);
+                    Weapon weapon = null;
+                    GameObject obj = Instantiate(statData.defaultWeapon);
+                    if (obj != null) weapon = obj.GetComponent<Weapon>();
+                    if (weapon != null) weapon.PickUp(transform);
                 }
             }
 
